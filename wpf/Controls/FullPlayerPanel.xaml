@@ -4,19 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ZoDream.Player.Controls"
+             x:Name="root"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="IconBtn" TargetType="Button">
-                <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="VerticalAlignment" Value="Bottom"/>
-                <Setter Property="Padding" Value="10"/>
-            </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ZoDream.Player;component/Skins/PlayControl.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -26,16 +21,16 @@
         </Grid.ColumnDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Image Grid.RowSpan="2"/>
-            <TextBlock Text="歌名" Grid.Column="1"/>
-            <TextBlock Text="作者" Grid.Column="1" Grid.Row="1"/>
+            <Image x:Name="CoverImage" Grid.RowSpan="2"/>
+            <TextBlock x:Name="NameTb" Text="歌名" FontSize="18" Padding="0,10,0,10" Grid.Column="1"/>
+            <TextBlock x:Name="AuthorTb" Text="作者" Grid.Column="1" Grid.Row="1"/>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
@@ -51,30 +46,39 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Slider x:Name="ProgressSlider"/>
+                <Slider Style="{StaticResource ProgressSlider}" x:Name="ProgressSlider" ValueChanged="ProgressSlider_ValueChanged" Maximum="100"/>
                 <TextBlock x:Name="ProgressLabel" Text="00:00/00:00" Grid.Column="1" VerticalAlignment="Center"/>
             </Grid>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button Content="&#xE14B;" Style="{StaticResource IconBtn}"/>
-                <Button Content="&#xE100;" Style="{StaticResource IconBtn}" Grid.Column="1"/>
-                <Button Content="&#xE102;" FontSize="30" Style="{StaticResource IconBtn}" Grid.Column="2"/>
-                <Button Content="&#xE101;" Style="{StaticResource IconBtn}" Grid.Column="3"/>
+                <Button x:Name="PreviousBtn" Click="PreviousBtn_Click" Content="&#xE100;" Style="{StaticResource IconBtn}" Grid.Column="1"/>
+                <Button x:Name="PlayBtn" Click="PlayBtn_Click" Content="{Binding Path=Paused,ElementName=root,Converter={StaticResource PausedConverter}}" FontSize="30" 
+                        Template="{DynamicResource IconButton}"  Style="{StaticResource IconBtn}" Grid.Column="2"/>
+                <Button x:Name="NextBtn" Click="NextBtn_Click" Content="&#xE101;" Style="{StaticResource IconBtn}" Grid.Column="3"/>
                 <Button Content="&#xE117;" Style="{StaticResource IconBtn}" Grid.Column="4"/>
             </Grid>
             <Grid Grid.Column="1" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition MinWidth="80"/>
                 </Grid.ColumnDefinitions>
-                <Button Content="&#xE15D;" Style="{StaticResource IconBtn}"/>
-                <Slider Grid.Column="1"/>
+                <Button
+                    x:Name="VolumeBtn" Click="VolumeBtn_Click"
+                    Content="{Binding Path=Volume,ElementName=root,Converter={StaticResource VolumeConverter}}" Style="{StaticResource IconBtn}"/>
+                <Slider x:Name="VolumeSlider" Grid.Column="1" 
+                        Value="{Binding Path=Volume,ElementName=root}"
+                        Style="{StaticResource ProgressSlider}" 
+                        ValueChanged="VolumeSlider_ValueChanged"
+                        Margin="0 0 0 10"
+                         Maximum="100"
+                        VerticalAlignment="Bottom"/>
             </Grid>
         </Grid>
     </Grid>

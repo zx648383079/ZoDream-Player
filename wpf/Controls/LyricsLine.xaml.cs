@@ -26,8 +26,6 @@ namespace ZoDream.Player.Controls
             InitializeComponent();
         }
 
-
-
         public LyricsItem Source
         {
             get { return (LyricsItem)GetValue(SourceProperty); }
@@ -60,7 +58,7 @@ namespace ZoDream.Player.Controls
 
         // Using a DependencyProperty as the backing store for Outline.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OutlineProperty =
-            DependencyProperty.Register("Outline", typeof(Color), typeof(LyricsLine), new PropertyMetadata(Colors.Yellow));
+            DependencyProperty.Register("Outline", typeof(Color), typeof(LyricsLine), new PropertyMetadata(Colors.GreenYellow));
 
 
 
@@ -72,7 +70,7 @@ namespace ZoDream.Player.Controls
 
         // Using a DependencyProperty as the backing store for Offset.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OffsetProperty =
-            DependencyProperty.Register("Offset", typeof(double), typeof(LyricsLine), new PropertyMetadata(0));
+            DependencyProperty.Register("Offset", typeof(double), typeof(LyricsLine), new PropertyMetadata(.0));
 
     }
 }

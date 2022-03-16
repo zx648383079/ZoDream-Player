@@ -78,6 +78,7 @@ namespace ZoDream.Player.Controls
         private void TimeUpdate()
         {
             var isScroll = false;
+            MainBox.Margin = new Thickness(0, ActualHeight/2, 0, ActualHeight / 2);
             foreach (LyricsLine item in MainBox.Children)
             {
                 if (item is not LyricsLine)
@@ -85,14 +86,15 @@ namespace ZoDream.Player.Controls
                     continue;
                 }
                 var isActive = item.Source.IsActive(CurrentTime);
-                item.FontSize = isActive ? 16 : 32;
+                item.FontSize = isActive ? 20 : 16;
+                item.HorizontalAlignment = HorizontalAlignment.Center;
                 if (isActive && !isScroll)
                 {
                     isScroll = true;
                     var currentScrollPosition = ScrollBar.VerticalOffset;
                     var point = new Point(0, currentScrollPosition);
                     var targetPosition = item.TransformToVisual(ScrollBar).Transform(point);
-                    ScrollBar.ScrollToVerticalOffset(targetPosition.Y);
+                    ScrollBar.ScrollToVerticalOffset(targetPosition.Y - (ActualHeight - item.ActualHeight) / 2);
                 }
                 item.Offset = item.Source.GetOffset(CurrentTime);
             }

@@ -6,7 +6,5 @@
              xmlns:local="clr-namespace:ZoDream.Player.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <Canvas x:Name="MainBox"></Canvas>
 </UserControl>

@@ -10,62 +10,20 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converter:PausedConverter x:Key="PausedConverter"/>
-            <Style x:Key="IconBtn" TargetType="Button">
-                <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
-                <Setter Property="Background" Value="#333"/>
-                <Setter Property="Foreground" Value="#fff"/>
-                <Setter Property="FontSize" Value="50"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="VerticalAlignment" Value="Bottom"/>
-                <Setter Property="Padding" Value="20"/>
-            </Style>
-            <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
-            <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
-            <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
-            <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
-            <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
-            <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
-            <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
-            <ControlTemplate x:Key="IconButton" TargetType="{x:Type ButtonBase}">
-                <Border x:Name="border"
-                        CornerRadius="90"
-                        Background="{TemplateBinding Background}" 
-                        BorderThickness="{TemplateBinding BorderThickness}" 
-                        BorderBrush="{TemplateBinding BorderBrush}" 
-                        SnapsToDevicePixels="true">
-                    <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                </Border>
-                <ControlTemplate.Triggers>
-                    <Trigger Property="Button.IsDefaulted" Value="true">
-                        <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                    </Trigger>
-                    <Trigger Property="IsMouseOver" Value="true">
-                        <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
-                        <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
-                    </Trigger>
-                    <Trigger Property="IsPressed" Value="true">
-                        <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
-                        <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
-                    </Trigger>
-                    <Trigger Property="IsEnabled" Value="false">
-                        <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
-                        <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
-                        <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
-                    </Trigger>
-                </ControlTemplate.Triggers>
-            </ControlTemplate>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ZoDream.Player;component/Skins/PlayControl.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid x:Name="ActionBox" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <Button Template="{DynamicResource IconButton}" Content="&#xE100;" Style="{StaticResource IconBtn}"/>
-        <Button Template="{DynamicResource IconButton}" Content="{Binding Path=Paused,ElementName=root,Converter={StaticResource PausedConverter}}" Style="{StaticResource IconBtn}" FontSize="90" Grid.Column="1"/>
-        <Button Template="{DynamicResource IconButton}" Content="&#xE101;" Style="{StaticResource IconBtn}" Grid.Column="2"/>
+        <Button x:Name="PreviousBtn" Click="PreviousBtn_Click" Template="{DynamicResource IconButton}" Content="&#xE100;" Style="{StaticResource IconBtn}"/>
+        <Button x:Name="PlayBtn" Click="PlayBtn_Click" Template="{DynamicResource IconButton}" Content="{Binding Path=Paused,ElementName=root,Converter={StaticResource PausedConverter}}" Style="{StaticResource IconBtn}" FontSize="90" Grid.Column="1"/>
+        <Button x:Name="NextBtn" Click="NextBtn_Click" Template="{DynamicResource IconButton}" Content="&#xE101;" Style="{StaticResource IconBtn}" Grid.Column="2"/>
         
     </Grid>
 </UserControl>

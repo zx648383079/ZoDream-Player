@@ -23,9 +23,19 @@ namespace ZoDream.Player.Controls
         public PlayerPanel()
         {
             InitializeComponent();
+            MouseEnter += PlayerPanel_MouseEnter;
+            MouseLeave += PlayerPanel_MouseLeave;
         }
 
+        private void PlayerPanel_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ActionBox.Visibility = Visibility.Collapsed;
+        }
 
+        private void PlayerPanel_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ActionBox.Visibility = Visibility.Visible;
+        }
 
         public bool Paused
         {
@@ -37,6 +47,37 @@ namespace ZoDream.Player.Controls
         public static readonly DependencyProperty PausedProperty =
             DependencyProperty.Register("Paused", typeof(bool), typeof(PlayerPanel), new PropertyMetadata(true));
 
+        public event ControlEventHandler Play;
 
+        public event ControlEventHandler Stop;
+
+        public event ControlEventHandler Pause;
+
+        public event ControlEventHandler Next;
+
+        public event ControlEventHandler Previous;
+
+        private void PreviousBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Previous?.Invoke(this);
+        }
+
+        private void PlayBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Paused)
+            {
+                Play?.Invoke(this);
+                return;
+            }
+            else
+            {
+                Pause?.Invoke(this);
+            }
+        }
+
+        private void NextBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Next?.Invoke(this);
+        }
     }
 }

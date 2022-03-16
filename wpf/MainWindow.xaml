@@ -7,24 +7,70 @@
         mc:Ignorable="d"
         Background="Transparent"
         AllowsTransparency="True"
-        Title="MainWindow" Height="600" Width="300" WindowStyle="None">
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Title="MainWindow" Height="600" Width="400" WindowStyle="None">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ZoDream.Player;component/Skins/BaseControl.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="200"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Background="#fff">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <control:SpectrumPanel/>
-            <control:FullPlayerPanel Grid.Row="1"/>
-        </Grid>
-        <Grid  Background="#fff" Visibility="Collapsed">
-            <control:LyricsPanel/>
-            <control:PlayerPanel/>
-        </Grid>
-        <control:CatalogBox Grid.Row="1"/>
+        <Border x:Name="PanelBorder" CornerRadius="20,20,0,0" Background="#fff">
+            <Grid>
+                <Grid x:Name="FullPanel" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <control:SpectrumPanel x:Name="SpectrumBox" Margin="10,0"/>
+                    <control:FullPlayerPanel x:Name="ControlPanel" 
+                                         VolumeChanged="ControlPanel_VolumeChanged"
+                                         ProgressChanged="ControlPanel_ProgressChanged"
+                                         Pause="ControlPanel_Pause"
+                                         Play="ControlPanel_Play"
+                                         Next="ControlPanel_Next"
+                                         Previous="ControlPanel_Previous"
+                                         Paused="{Binding Path=Paused}"
+                                         Source="{Binding Path=CurrentFile}"
+                                         Grid.Row="1"/>
+                </Grid>
+                <Grid x:Name="MiniPanel" Visibility="Collapsed">
+                    <control:LyricsPanel x:Name="lyricsBox"/>
+                    <control:PlayerPanel x:Name="MiniControlPanel" Pause="ControlPanel_Pause"
+                                         Play="ControlPanel_Play" Next="ControlPanel_Next"
+                                        Paused="{Binding Path=Paused}"
+                                         Previous="ControlPanel_Previous"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button x:Name="SettingBtn" Click="SettingBtn_Click" Content="&#xE115;" 
+                    Style="{StaticResource IconBtn}"/>
+            <Button x:Name="MiniBtn" Click="MiniBtn_Click" Content="&#xE921;" Style="{StaticResource IconBtn}"/>
+            <Button x:Name="QuitBtn" Click="QuitBtn_Click" Content="&#xE106;" Style="{StaticResource IconBtn}"/>
+        </StackPanel>
+
+        <control:CatalogBox Grid.Row="1" x:Name="FileBox" 
+                            Items="{Binding Path=FileItems}" 
+                            SelectionChanged="FileBox_SelectionChanged"
+                            Open="FileBox_Open"
+                            Close="FileBox_Close"/>
+
+        <Popup x:Name="SettingMenu" AllowsTransparency="True" StaysOpen="False" PlacementTarget="{Binding ElementName=SettingBtn}">
+            <StackPanel>
+                <MenuItem x:Name="LyricsBtn" Click="LyricsBtn_Click" Header="显示歌词" 
+                          Style="{DynamicResource PopMenu}"/>
+                <MenuItem x:Name="CatalogBtn" IsChecked="True" Click="CatalogBtn_Click" 
+                          Header="显示歌单" Style="{DynamicResource PopMenu}"/>
+                <MenuItem x:Name="LyricsEditBtn" Click="LyricsEditBtn_Click" Header="编辑歌词"/>
+            </StackPanel>
+        </Popup>
     </Grid>
 </Window>
