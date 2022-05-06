@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using ZoDream.Player.ViewModels;
 
 namespace ZoDream.Player
 {
@@ -13,5 +14,7 @@ namespace ZoDream.Player
     /// </summary>
     public partial class App : Application
     {
+
+        public static MainViewModel ViewModel = new();
     }
 }

@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
 using ZoDream.Shared.Models;
+using ZoDream.Shared.Storage;
 
 namespace ZoDream.Shared.Readers
 {
@@ -14,7 +15,7 @@ namespace ZoDream.Shared.Readers
     {
         protected override async Task WriteFileAsync(string file, string content)
         {
-            await Storage.File.WriteAsync(file, content);
+            await LocationStorage.WriteAsync(file, content);
         }
     }
 }

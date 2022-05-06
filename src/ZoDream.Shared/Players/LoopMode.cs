@@ -6,7 +6,7 @@ namespace ZoDream.Shared.Players
 {
     public enum LoopMode
     {
-        None,
+        None, // 顺序播放
         Loop,
         Random,
         SingleLoop,

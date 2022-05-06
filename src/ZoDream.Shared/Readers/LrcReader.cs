@@ -228,7 +228,7 @@ namespace ZoDream.Shared.Readers
         /// <returns></returns>
         protected virtual async Task<string> ReadFileAsync(string file)
         {
-            return await File.ReadAsync(file);
+            return await LocationStorage.ReadAsync(file);
         }
     }
 }

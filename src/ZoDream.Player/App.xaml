@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:ZoDream.Player"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes/WindowStyle.xaml"/>
+                <ResourceDictionary Source="/Themes/MainSkin.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

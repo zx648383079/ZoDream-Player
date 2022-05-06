@@ -1,0 +1,63 @@
+﻿<Window x:Class="ZoDream.Player.Pages.CatalogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ZoDream.Player.Pages"
+        mc:Ignorable="d"
+        Title="Catalog" Height="450" Width="600"
+        WindowStartupLocation="CenterScreen"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        DragOver="Window_DragOver"
+        Drop="Window_Drop"
+        Style="{StaticResource CustomWin}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button x:Name="FolderBtn" Click="FolderBtn_Click" Content="&#xE838;" Style="{StaticResource MenuIconBtn}"/>
+            <Button x:Name="FileBtn" Click="FileBtn_Click" Content="&#xE1A5;" Style="{StaticResource MenuIconBtn}"/>
+            <Button x:Name="MinBtn" Click="MinBtn_Click" Content="&#xE921;" Style="{StaticResource MenuIconBtn}"/>
+            <Button x:Name="CloseBtn" Click="CloseBtn_Click" Content="&#xE106;" Style="{StaticResource MenuIconBtn}"/>
+        </StackPanel>
+        <ListBox x:Name="CatalogBox"
+                Grid.Row="1" 
+                 ItemsSource="{Binding FileItems}" 
+                 HorizontalContentAlignment="Stretch">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Duration,Converter={StaticResource TimeCvt}}" Grid.Column="1" VerticalAlignment="Center"/>
+                    </Grid>
+                    <!--<Border CornerRadius="10" Background="#ccc">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Height="80"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="音乐.mp4" FontSize="20" VerticalAlignment="Center"/>
+                                <TextBlock Text="演唱" Foreground="#777"/>
+                            </StackPanel>
+                            <TextBlock Text="01:00" Grid.Column="2" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>-->
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

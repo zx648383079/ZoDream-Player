@@ -143,7 +143,7 @@ namespace ZoDream.Shared.Readers
 
         protected virtual async Task WriteFileAsync(string file, string content)
         {
-            await File.WriteAsync(file, content);
+            await LocationStorage.WriteAsync(file, content);
         }
     }
 }

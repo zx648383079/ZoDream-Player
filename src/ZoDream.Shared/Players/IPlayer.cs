@@ -8,14 +8,14 @@ namespace ZoDream.Shared.Players
 {
     public interface IPlayer: IDisposable
     {
-        public event ControlValueEventHandler TimeUpdated;
-        public event ControlEventHandler Began;
-        public event ControlEventHandler Ended;
-        public event ControlValueEventHandler VolumeChanged;
+        public event ControlValueEventHandler? TimeUpdated;
+        public event ControlEventHandler? Began;
+        public event ControlEventHandler? Ended;
+        public event ControlValueEventHandler? VolumeChanged;
 
-        public event ControlEventHandler OnPlay;
-        public event ControlEventHandler OnPause;
-        public event ControlEventHandler OnStop;
+        public event ControlEventHandler? OnPlay;
+        public event ControlEventHandler? OnPause;
+        public event ControlEventHandler? OnStop;
 
         public bool IsPaused { get; }
         public bool IsPlaying { get; }
@@ -28,6 +28,8 @@ namespace ZoDream.Shared.Players
 
         public double Duration { get; }
         public double Progress { get; }
+
+        public Task ReadyAsync();
 
         public Task PlayAsync();
         public Task PlayAsync(FileItem item);
@@ -43,7 +45,7 @@ namespace ZoDream.Shared.Players
 
         public void Mute();
 
-        public byte[] ChannelData(int length);
+        public float[] ChannelData(int length);
 
         public void Add(FileItem item);
         public void Remove(FileItem item);

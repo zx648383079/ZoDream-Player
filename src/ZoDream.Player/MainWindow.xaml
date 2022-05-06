@@ -4,9 +4,43 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZoDream.Player"
+        xmlns:sctl="clr-namespace:ZoDream.Shared.Controls;assembly=ZoDream.Shared.Controls"
+        xmlns:ctl="clr-namespace:ZoDream.Player.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="ZoDream Player" Height="450" Width="600" 
+        Unloaded="Window_Unloaded"
+        Loaded="Window_Loaded"
+        WindowStartupLocation="CenterScreen"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Style="{StaticResource CustomWin}">
+    <Window.ContextMenu>
+        <ContextMenu x:Name="SettingMenu">
+            <MenuItem Header="隐藏"/>
+        </ContextMenu>
+    </Window.ContextMenu>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button x:Name="SettingBtn" Click="SettingBtn_Click" Content="&#xE115;" Style="{StaticResource MenuIconBtn}"/>
+            <Button x:Name="MinBtn" Click="MinBtn_Click" Content="&#xE921;" Style="{StaticResource MenuIconBtn}"/>
+            <Button x:Name="CloseBtn" Click="CloseBtn_Click" Content="&#xE106;" Style="{StaticResource MenuIconBtn}"/>
+        </StackPanel>
+        <ctl:SpectrumPanel x:Name="SpectPanel" Grid.Row="1" Kind="Ring"/>
+        <ctl:LyricsPanel Grid.Row="1"/>
+        <sctl:ProgressBar x:Name="ProgressBar" Grid.Row="2" Margin="10,0"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <sctl:IconButton x:Name="PreviousBtn" Icon="&#xE100;" Click="PreviousBtn_Click" Style="{StaticResource BarBtn}"/>
+            <sctl:IconButton x:Name="PlayBtn" Icon="&#xE102;" Click="PlayBtn_Click" Style="{StaticResource PlusBarBtn}" 
+                             Visibility="{Binding IsPaused, Converter={StaticResource BoolCvt}}"/>
+            <sctl:IconButton x:Name="PauseBtn" Icon="&#xE103;" Click="PauseBtn_Click" Style="{StaticResource PlusBarBtn}"
+                             Visibility="{Binding IsPaused, Converter={StaticResource BoolCvt}, ConverterParameter=false}"/>
+            <sctl:IconButton x:Name="NextBtn" Icon="&#xE101;" Click="NextBtn_Click" Style="{StaticResource BarBtn}"/>
+            <Button x:Name="CatalogBtn" Click="CatalogBtn_Click" Content="&#xE14C;" Style="{StaticResource MenuIconBtn}"/>
+        </StackPanel>
     </Grid>
 </Window>
