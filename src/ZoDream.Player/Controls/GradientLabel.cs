@@ -190,7 +190,7 @@ namespace ZoDream.Player.Controls
                             font, FontSize, fromBrush, 1.25);
             var height = format.Height;
             var width = format.Width;
-            var x = (ActualWidth - width) / 2;
+            var x = GetLeft(width);
             var start = (int)Math.Floor(offset);
             var startX = .0;
             if (start > 0)
@@ -256,7 +256,7 @@ namespace ZoDream.Player.Controls
         {
             var format = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                             font, FontSize, brush, 1.25);
-            RenderText(drawingContext, format, (ActualWidth - format.Width) / 2, y);
+            RenderText(drawingContext, format, GetLeft(format.Width), y);
             return format.Height;
         }
 
@@ -267,5 +267,17 @@ namespace ZoDream.Player.Controls
                 x, y));
         }
 
+        private double GetLeft(double fontWidth)
+        {
+            switch (HorizontalContentAlignment)
+            {
+                case HorizontalAlignment.Center:
+                    return (ActualWidth - fontWidth) / 2;
+                case HorizontalAlignment.Right:
+                    return ActualWidth - fontWidth - Padding.Right;
+                default:
+                    return Padding.Left;
+            }
+        }
     }
 }

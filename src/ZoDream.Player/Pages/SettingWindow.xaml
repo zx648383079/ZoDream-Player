@@ -4,9 +4,105 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZoDream.Player.Pages"
+        xmlns:ctl="clr-namespace:ZoDream.Shared.Controls;assembly=ZoDream.Shared.Controls"
         mc:Ignorable="d"
-        Title="SettingWindow" Height="450" Width="800">
+        Title="Setting" Height="450" Width="800" 
+        ShowInTaskbar="False" Topmost="True" 
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style x:Key="HeaderTb" TargetType="TextBlock">
+                <Setter Property="Padding" Value="0 8"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+            <Style TargetType="TabItem">
+                <Setter Property="Padding" Value="20 5"/>
+            </Style>
+            <Style TargetType="ScrollViewer">
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
-        
+        <TabControl TabStripPlacement="Left">
+            <TabItem Header="常规">
+                <ScrollViewer>
+                    <GroupBox Header="视觉体验">
+                        <StackPanel>
+                            <TextBlock Text="显示歌曲信息" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
+                            <TextBlock Text="播放模式" Style="{StaticResource HeaderTb}"/>
+                            <ComboBox/>
+                            <TextBlock Text="音量大小" Style="{StaticResource HeaderTb}"/>
+                            <ComboBox/>
+                            <TextBlock Text="显示频谱" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
+                            <TextBlock Text="频谱样式" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput OnLabel="圆形" OffLabel="柱状"/>
+                            <TextBlock Text="频谱颜色" Style="{StaticResource HeaderTb}"/>
+                            <TextBox HorizontalAlignment="Left" Width="100"/>
+                        </StackPanel>
+                    </GroupBox>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="歌词">
+                <ScrollViewer>
+                    <GroupBox Header="歌词显示">
+                        <StackPanel>
+                            <TextBlock Text="显示歌词" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
+                            <TextBlock Text="显示桌面歌词" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
+                            <TextBlock Text="歌词默认颜色" Style="{StaticResource HeaderTb}"/>
+                            <TextBox  HorizontalAlignment="Left" Width="100"/>
+                            <TextBlock Text="歌词过渡颜色" Style="{StaticResource HeaderTb}"/>
+                            <TextBox  HorizontalAlignment="Left" Width="100"/>
+                            <TextBlock Text="歌词字体" Style="{StaticResource HeaderTb}"/>
+                            <ComboBox/>
+                            <TextBlock Text="歌词字体大小" Style="{StaticResource HeaderTb}"/>
+                            <ctl:NumberInput/>
+                            <TextBlock Text="歌词文件关联" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
+                        </StackPanel>
+                    </GroupBox>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="插件">
+                <GroupBox Header="插件管理">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+                        <ListBox></ListBox>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                            <Button Content="导入" Width="80"/>
+                            <Button Content="安装" Width="80"/>
+                            <Button Content="卸载" Width="80"/>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </TabItem>
+            <TabItem Header="关于">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Center">
+                        <TextBlock Text="ZoDream Player" FontSize="30"/>
+                        <TextBlock Text="v1.0"/>
+                        <ctl:HyperlinkButton Content="Copyright © 2022 zodream.cn" 
+                                             NavigateUri="https://github.com/zx648383079/ZoDream-Player"
+                                             />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

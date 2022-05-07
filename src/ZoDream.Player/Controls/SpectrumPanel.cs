@@ -112,36 +112,65 @@ namespace ZoDream.Player.Controls
                 case SpectrumType.Columnar:
                     RenderColumnar(drawingContext);
                     break;
+                case SpectrumType.SymmetryColumnar:
+                    RenderSymmetryColumnar(drawingContext);
+                    break;
                 case SpectrumType.Ring:
                     RenderRing(drawingContext);
+                    break;
+                case SpectrumType.RingLine:
+                    RenderRingLine(drawingContext);
+                    break;
+                case SpectrumType.SymmetryRing:
+                    RenderSymmetryRing(drawingContext);
                     break;
                 default:
                     break;
             }
         }
 
-        private void RenderColumnar(DrawingContext drawingContext)
+        private void RenderEach(DrawingContext drawingContext, 
+            int dataBegin, int count, double rate, double maxHeight, 
+            Action<DrawingContext, Pen, int, double, double, double> func)
         {
             var pen = new Pen(BorderBrush, 0);
             var outerWidth = ColumnWidth + Space;
-            var columnCount = Math.Floor(ActualWidth / outerWidth);
-            var dataIndex = 0;//Convert.ToInt32((Items.Length - columnCount) / 2);
-            var maxHeight = ActualHeight;
+            var dataIndex = dataBegin;
             var y = maxHeight;
             var preRectHeight = maxHeight / 300;
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < count; i++)
             {
-                RenderColumnar(drawingContext, pen, i, outerWidth * i, y, 
-                    dataIndex >= 0 && dataIndex < Items.Length ? 
-                    Items[dataIndex] * preRectHeight * Rate: 0);
+                func?.Invoke(drawingContext, pen, i, outerWidth * i, y,
+                    dataIndex >= 0 && dataIndex < Items.Length ?
+                    Items[dataIndex] * preRectHeight * rate : 0);
                 dataIndex++;
             }
         }
 
-        private void RenderColumnar(DrawingContext drawingContext, Pen pen, int index, 
+        private void RenderColumnar(DrawingContext drawingContext)
+        {
+            var outerWidth = ColumnWidth + Space;
+            RenderEach(drawingContext, 0,
+                (int)Math.Floor(ActualWidth / outerWidth), 
+                Rate * 3, ActualHeight, RenderColumnar);
+        }
+
+        private void RenderColumnar(DrawingContext drawingContext, Pen pen, int index,
             double x, double y, double height)
         {
-            var rectHeight = RectHeight > 0 ? RectHeight: height;
+            RenderColumnar(drawingContext, pen, index, x, y, height, true);
+        }
+
+        private void RenderColumnar(DrawingContext drawingContext, Pen pen, int index, 
+            double x, double y, double height, bool hasHat)
+        {
+            RenderColumnar(drawingContext, pen, index, x, y, height, hasHat ? GetHat(index, height) : null);
+        }
+
+        private void RenderColumnar(DrawingContext drawingContext, Pen pen, int index,
+            double x, double y, double height, HatItem? hat)
+        {
+            var rectHeight = RectHeight > 0 ? RectHeight : height;
             if (height > 0)
             {
                 var bottom = .0;
@@ -155,18 +184,29 @@ namespace ZoDream.Player.Controls
                     bottom += rectHeight + Space;
                 }
             }
+            else if (hat is null)
+            {
+                drawingContext.DrawRectangle(Foreground, pen
+                    , new Rect(
+                        x, y - 2, ColumnWidth, 2
+                        ));
+            }
+            if (hat is null)
+            {
+                return;
+            }
             var hatHeight = RectHeight > 0 ? RectHeight : Space;
-            var hat = GetHat(index, height);
             var hatY = y - hat.Current - hatHeight;
             if (hat.Current > 0)
             {
                 hatY -= Space;
-            } 
+            }
             drawingContext.DrawRectangle(Foreground,
                 pen, new Rect(
                     x, hatY, ColumnWidth, hatHeight
                     ));
         }
+
 
         private HatItem GetHat(int index, double height)
         {
@@ -206,89 +246,109 @@ namespace ZoDream.Player.Controls
 
         private void RenderRing(DrawingContext drawingContext)
         {
-            var pen = new Pen(BorderBrush, 0);
+            RenderRing(drawingContext, .6, 360.0, 1, (d, p, i, x, y, h, a, cx, cy) =>
+            {
+                var tranform = new RotateTransform(a, cx, cy);
+                drawingContext.PushTransform(tranform);
+                RenderColumnar(d, p, i, x, y, h);
+                drawingContext.Pop();
+            });
+        }
+
+        private void RenderRing(DrawingContext drawingContext, double radiusRate, 
+            double maxAngle, double perimeterRate, 
+            Action<DrawingContext, Pen, int, double, double, double, double, double, double> func)
+        {
             var outerWidth = ColumnWidth + Space;
-            var dataIndex = 0;//Convert.ToInt32((Items.Length - columnCount) / 2);
             var centerX = ActualWidth / 2;
             var centerY = ActualHeight / 2;
-            var radius = Math.Min(centerX, centerY) / 1.5;
-            var columnCount = (int)Math.Min(Math.Max(Items.Length, 10), Math.Floor(Math.PI * radius * 2 / outerWidth));
-            var preAngle = 360.0 / columnCount;
-            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Transparent),
-                new Pen(Foreground, 1), new Point(centerX, centerY), radius, radius);
+            var radius = Math.Min(centerX, centerY) * radiusRate;
+            var columnCount = (int)Math.Min(Math.Max(Items.Length, 10), Math.Floor(Math.PI * radius * 2 * perimeterRate / outerWidth));
+            var preAngle = maxAngle / columnCount;
             if (Items.Length < 1)
             {
                 return;
             }
+            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Transparent),
+                new Pen(Foreground, 1), new Point(centerX, centerY), radius, radius);
+
             var y = centerY - radius;
-            var preRectHeight = y / 300;
-            for (int i = 0; i < columnCount; i++)
+            var x = centerX - ColumnWidth / 2;
+            RenderEach(drawingContext, 0, columnCount, Rate, y, (d, p, i, _, _, h) =>
             {
-                var tranform = new RotateTransform(i * preAngle, centerX, centerY);
+                func?.Invoke(d, p, i, x, y, h, i * preAngle, centerX, centerY);
+            });
+        }
+
+
+        private void RenderSymmetryColumnar(DrawingContext drawingContext)
+        {
+            var outerWidth = ColumnWidth + Space;
+            RenderEach(drawingContext, 0,
+                (int)Math.Floor(ActualWidth / outerWidth),
+                Rate, ActualHeight / 2, RenderSymmetryColumnar);
+        }
+
+        private void RenderSymmetryColumnar(DrawingContext drawingContext, Pen pen, int index,
+            double x, double y, double height)
+        {
+            if (height < 2)
+            {
+                height = 1;
+            }
+            drawingContext.DrawRectangle(Foreground, pen
+                , new Rect(
+                    x, y - height, ColumnWidth, 2 * height
+                    ));
+        }
+
+        private void RenderRingLine(DrawingContext drawingContext)
+        {
+            var outerWidth = ColumnWidth + Space;
+            var centerX = ActualWidth / 2;
+            var centerY = ActualHeight / 2;
+            var radius = Math.Min(centerX, centerY) * .6;
+            var columnCount = (int)Math.Min(Math.Max(Items.Length, 10), 
+                Math.Floor(Math.PI * radius / outerWidth));
+            var preAngle = 180 / columnCount;
+            if (Items.Length < 1)
+            {
+                return;
+            }
+            var pen = new Pen(Foreground, 1);
+            //drawingContext.DrawEllipse(new SolidColorBrush(Colors.Transparent), pen
+            //    , new Point(centerX, centerY), radius, radius);
+            RenderEach(drawingContext, 0, columnCount, Rate, centerY - radius, (d, _, i, _, _, h) =>
+            {
+                var len = radius + h;
+                var angle = i * preAngle;
+                var x = centerX + Math.Sin(angle) * len;
+                var y = centerY - Math.Cos(angle) * len;
+
+                len = radius - h;
+                var x2 = centerX + Math.Sin(angle) * len;
+                var y2 = centerY - Math.Cos(angle) * len;
+
+                d.DrawLine(pen, new Point(x, y), new Point(x2, y2));
+                d.DrawLine(pen, new Point(centerX * 2 - x, y), new Point(centerX * 2 - x2, y2));
+
+            });
+        }
+
+        private void RenderSymmetryRing(DrawingContext drawingContext)
+        {
+            RenderRing(drawingContext, .6, 180.0, .5, (d, p, i, x, y, h, a, cx, cy) =>
+            {
+                var tranform = new RotateTransform(a, cx, cy);
                 drawingContext.PushTransform(tranform);
-                RenderColumnar(drawingContext, pen, i, 
-                    centerX - ColumnWidth / 2
-                    , y,
-                    dataIndex >= 0 && dataIndex < Items.Length ?
-                    Items[dataIndex] * preRectHeight * Rate : 0);
+                RenderColumnar(d, p, i, x, y, h);
                 drawingContext.Pop();
-                dataIndex++;
-            }
+                tranform = new RotateTransform(-a, cx, cy);
+                drawingContext.PushTransform(tranform);
+                RenderColumnar(d, p, i, x, y, h, HatItems[i]);
+                drawingContext.Pop();
+            });
         }
 
-        private void RenderRing(DrawingContext drawingContext, Pen pen, int index, double x, double y, double height, double angle)
-        {
-
-        }
-
-        /// <summary>
-        /// 画柱状
-        /// </summary>
-        /// <param name="maxWidth"></param>
-        /// <param name="maxHeight"></param>
-        /// <param name="maxLength"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private static IList<Rect> RenderColumnar(double maxWidth, double maxHeight, int maxLength, byte[] data)
-        {
-            var items = new List<Rect>();
-            var w = maxWidth / maxLength - 2;
-            for (int i = 0; i < maxLength; i++)
-            {
-                var x = (w + 1) * i;
-                var b = data == null || i >= data.Length ? 0 : Math.Max(0, (int)data[i]);
-                var h = maxHeight * b / 256;
-                var y = maxHeight - h;
-                items.Add(new Rect(x, y, w, h));
-            }
-            return items;
-        }
-
-        /// <summary>
-        /// 画圆环
-        /// </summary>
-        /// <param name="maxWidth"></param>
-        /// <param name="maxHeight"></param>
-        /// <param name="maxLength"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private static IList<Rect> RenderRing(double maxWidth, double maxHeight, int maxLength, byte[] data)
-        {
-            var items = new List<Rect>();
-            var centerX = maxWidth / 2;
-            var centerY = maxHeight / 2;
-            var radius = Math.Min(centerX, centerY);
-            var angle = 360 / maxLength;
-            for (int i = 0; i < maxLength; i++)
-            {
-                var b = data == null || i >= data.Length ? 0 : Math.Max(0, (int)data[i]);
-                var h = radius * b / 256;
-                var a = angle * i - 90;
-                var x = radius * Math.Cos(a);
-                var y = radius * Math.Sin(a);
-                items.Add(new Rect(x, y, angle - 2, h));
-            }
-            return items;
-        }
     }
 }

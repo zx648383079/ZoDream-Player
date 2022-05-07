@@ -150,7 +150,7 @@ namespace ZoDream.Player
                 if (SpectRefreshTime < 1)
                 {
                     SpectPanel.Items = ViewModel.Player.ChannelData(128);
-                    SpectRefreshTime = 5;
+                    SpectRefreshTime = 0;
                 }
                 SpectRefreshTime--;
             });
@@ -210,6 +210,36 @@ namespace ZoDream.Player
         private void LyricsPanel_ItemChanged(object sender, LyricsItem e)
         {
             _ = ViewModel.Player.SeekAsync(e.Offset);
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as MenuItem).Header)
+            {
+                case "设置":
+                    ShowSetting();
+                    break;
+                case "桌面歌词":
+                    ShowLyrics();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        private void ShowSetting()
+        {
+            new SettingWindow().ShowDialog();
+        }
+
+        private void ShowLyrics()
+        {
+            var rect = SystemParameters.WorkArea;
+            var page = new LyricsWindow();
+            page.Show();
+            page.Left = (rect.Width - page.ActualWidth) / 2;
+            page.Top = (rect.Height - page.ActualHeight - 100);
         }
     }
 }

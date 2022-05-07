@@ -4,9 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZoDream.Player.Pages"
+        xmlns:ctl="clr-namespace:ZoDream.Player.Controls"
         mc:Ignorable="d"
-        Title="LyricsWindow" Height="450" Width="800">
+        Title="Lyrics" Height="150" Width="800"
+        Topmost="True"
+        ShowInTaskbar="False"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Style="{StaticResource CustomWin}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ctl:GradientLabel HorizontalContentAlignment="Left"/>
+        <ctl:GradientLabel HorizontalContentAlignment="Right" Grid.Row="1"/>
+        <Grid Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button x:Name="CloseBtn" Click="CloseBtn_Click" Content="&#xE106;" Style="{StaticResource MenuIconBtn}"/>
+            </StackPanel>
+        </Grid>
         
     </Grid>
 </Window>

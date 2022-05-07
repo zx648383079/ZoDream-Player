@@ -7,6 +7,9 @@ namespace ZoDream.Shared.Models
     public enum SpectrumType
     {
         Columnar,
-        Ring
+        SymmetryColumnar,
+        Ring,
+        SymmetryRing,
+        RingLine,
     }
 }
