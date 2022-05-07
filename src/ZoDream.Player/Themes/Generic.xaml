@@ -9,5 +9,4 @@
         <ResourceDictionary Source="/Themes/Panel.xaml"/>
         <ResourceDictionary Source="/Themes/Play.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    
 </ResourceDictionary>

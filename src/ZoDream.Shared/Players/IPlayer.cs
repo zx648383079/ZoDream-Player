@@ -8,10 +8,10 @@ namespace ZoDream.Shared.Players
 {
     public interface IPlayer: IDisposable
     {
-        public event ControlValueEventHandler? TimeUpdated;
-        public event ControlEventHandler? Began;
+        public event ControlValueEventHandler<double>? TimeUpdated;
+        public event ControlValueEventHandler<FileItem>? Began;
         public event ControlEventHandler? Ended;
-        public event ControlValueEventHandler? VolumeChanged;
+        public event ControlValueEventHandler<double>? VolumeChanged;
 
         public event ControlEventHandler? OnPlay;
         public event ControlEventHandler? OnPause;

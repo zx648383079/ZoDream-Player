@@ -93,9 +93,10 @@ namespace ZoDream.Player.Controls
             DependencyProperty.Register("Kind", typeof(SpectrumType), typeof(SpectrumPanel), new PropertyMetadata(SpectrumType.Columnar));
 
         private List<HatItem> HatItems = new();
-        private readonly double Space = 2.0;
-        private readonly double ColumnWidth = 10.0;
+        private readonly double Space = 1.0;
+        private readonly double ColumnWidth = 4.0;
         private readonly double HatSpeed = 2.0;
+        private readonly double Rate = 400;
 
         public int MaxCount => (int)Math.Floor(ActualWidth / (ColumnWidth + Space));
 
@@ -132,7 +133,7 @@ namespace ZoDream.Player.Controls
             {
                 RenderColumnar(drawingContext, pen, i, outerWidth * i, y, 
                     dataIndex >= 0 && dataIndex < Items.Length ? 
-                    Items[dataIndex] * preRectHeight * 200: 0);
+                    Items[dataIndex] * preRectHeight * Rate: 0);
                 dataIndex++;
             }
         }
@@ -210,7 +211,7 @@ namespace ZoDream.Player.Controls
             var dataIndex = 0;//Convert.ToInt32((Items.Length - columnCount) / 2);
             var centerX = ActualWidth / 2;
             var centerY = ActualHeight / 2;
-            var radius = Math.Min(centerX, centerY) / 2;
+            var radius = Math.Min(centerX, centerY) / 1.5;
             var columnCount = (int)Math.Min(Math.Max(Items.Length, 10), Math.Floor(Math.PI * radius * 2 / outerWidth));
             var preAngle = 360.0 / columnCount;
             drawingContext.DrawEllipse(new SolidColorBrush(Colors.Transparent),
@@ -229,7 +230,7 @@ namespace ZoDream.Player.Controls
                     centerX - ColumnWidth / 2
                     , y,
                     dataIndex >= 0 && dataIndex < Items.Length ?
-                    Items[dataIndex] * preRectHeight * 200 : 0);
+                    Items[dataIndex] * preRectHeight * Rate : 0);
                 drawingContext.Pop();
                 dataIndex++;
             }

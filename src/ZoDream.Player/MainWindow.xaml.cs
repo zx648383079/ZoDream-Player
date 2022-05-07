@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ZoDream.Player.Pages;
 using ZoDream.Player.ViewModels;
+using ZoDream.Shared.Models;
+using ZoDream.Shared.Readers;
 
 namespace ZoDream.Player
 {
@@ -130,15 +133,20 @@ namespace ZoDream.Player
 
         private void Player_OnStop(object sender)
         {
-            ViewModel.IsPaused = true;
-            ProgressBar.Value = 0;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                ViewModel.IsPaused = true;
+                ProgressBar.Value = 0;
+                LyricsPanel.Items = null;
+            });
         }
 
-        private void Player_TimeUpdated(object sender, double value = 0)
+        private void Player_TimeUpdated(object sender, double value)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
                 ProgressBar.Value = value;
+                LyricsPanel.CurrentTime = value;
                 if (SpectRefreshTime < 1)
                 {
                     SpectPanel.Items = ViewModel.Player.ChannelData(128);
@@ -168,12 +176,40 @@ namespace ZoDream.Player
             });
         }
 
-        private void Player_Began(object sender)
+        private void Player_Began(object sender, FileItem item)
         {
-            ProgressBar.Max = ViewModel.Player.Duration;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                ProgressBar.Max = ViewModel.Player.Duration;
+            });
             ViewModel.IsPaused = false;
+            _ = LoadLyricsAsync(item.Lyrics, ProgressBar.Max);
         }
 
+        private async Task LoadLyricsAsync(string file, double duration)
+        {
+            if (string.IsNullOrWhiteSpace(file))
+            {
+                LyricsPanel.Items = null;
+                return;
+            }
+            var reader = new LrcReader();
+            var lyrics = await reader.ReadAsync(file);
+            lyrics?.ApplyDuration((int)duration);
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                LyricsPanel.Items = lyrics == null ? null : lyrics.Items;
+            });
+        }
 
+        private void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _ = ViewModel.Player.SeekAsync(e.NewValue);
+        }
+
+        private void LyricsPanel_ItemChanged(object sender, LyricsItem e)
+        {
+            _ = ViewModel.Player.SeekAsync(e.Offset);
+        }
     }
 }

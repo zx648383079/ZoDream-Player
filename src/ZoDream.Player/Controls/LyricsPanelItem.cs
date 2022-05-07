@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZoDream.Shared.Models;
 
 namespace ZoDream.Player.Controls
 {
@@ -44,11 +45,73 @@ namespace ZoDream.Player.Controls
     ///     <MyNamespace:LyricsPanelItem/>
     ///
     /// </summary>
+    [TemplatePart(Name = TextTbName, Type =typeof(GradientLabel))]
+    [TemplatePart(Name = TransTbName, Type =typeof(TextBlock))]
+    [TemplatePart(Name = TranscriptionTbName, Type =typeof(TextBlock))]
     public class LyricsPanelItem : Control
     {
+        public const string TextTbName = "PART_TextTb";
+        public const string TransTbName = "PART_TransTb";
+        public const string TranscriptionTbName = "PART_TranscriptionTb";
         static LyricsPanelItem()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LyricsPanelItem), new FrameworkPropertyMetadata(typeof(LyricsPanelItem)));
         }
+
+        public LyricsItem Source
+        {
+            get { return (LyricsItem)GetValue(SourceProperty); }
+            set { SetValue(SourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Source.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SourceProperty =
+            DependencyProperty.Register("Source", typeof(LyricsItem), typeof(LyricsPanelItem), 
+                new PropertyMetadata(null, (d, e) =>
+                {
+                    (d as LyricsPanelItem)?.UpdateSource();
+                }));
+
+        public double Offset
+        {
+            get { return (double)GetValue(OffsetProperty); }
+            set { SetValue(OffsetProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Offset.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OffsetProperty =
+            DependencyProperty.Register("Offset", typeof(double), typeof(LyricsPanelItem), new PropertyMetadata(.0));
+
+        private GradientLabel? TextTb;
+        private TextBlock? TransTb;
+        private TextBlock? TranscriptionTb;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            TextTb = GetTemplateChild(TextTbName) as GradientLabel;
+            TransTb = GetTemplateChild(TransTbName) as TextBlock;
+            TranscriptionTb = GetTemplateChild(TranscriptionTbName) as TextBlock;
+            UpdateSource();
+        }
+
+        private void UpdateSource()
+        {
+            if (TextTb != null)
+            {
+                TextTb.Text = Source == null ? string.Empty : Source.Text;
+            }
+            if (TransTb != null)
+            {
+                TransTb.Text = Source == null ? string.Empty : Source.Translation;
+                TransTb.Visibility = string.IsNullOrWhiteSpace(TransTb.Text) ? Visibility.Collapsed : Visibility.Visible;
+            }
+            if (TranscriptionTb != null)
+            {
+                TranscriptionTb.Text = Source == null ? string.Empty : Source.Transcription;
+                TranscriptionTb.Visibility = string.IsNullOrWhiteSpace(TranscriptionTb.Text) ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
+
     }
 }

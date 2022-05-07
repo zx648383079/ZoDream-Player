@@ -6,8 +6,12 @@ namespace ZoDream.Shared.Utils
 {
     public static class Time
     {
-        public static string Format(double val)
+        public static string Format(double val, bool isSecond = true)
         {
+            if (!isSecond)
+            {
+                val /= 1000;
+            }
             var items = new List<string>
             {
                 TwoPad(val % 60)

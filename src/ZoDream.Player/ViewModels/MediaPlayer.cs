@@ -48,6 +48,9 @@ namespace ZoDream.Player.ViewModels
             } 
         }
 
+        /// <summary>
+        /// /ms
+        /// </summary>
         public double Duration
         {
             get
@@ -56,10 +59,12 @@ namespace ZoDream.Player.ViewModels
                 {
                     return .0;
                 }
-                return Bass.ChannelBytes2Seconds(ChannelHandle, Bass.ChannelGetLength(ChannelHandle));
+                return Bass.ChannelBytes2Seconds(ChannelHandle, Bass.ChannelGetLength(ChannelHandle)) * 1000;
             }
         }
-
+        /// <summary>
+        /// /ms
+        /// </summary>
         public double Progress
         {
             get
@@ -68,7 +73,7 @@ namespace ZoDream.Player.ViewModels
                 {
                     return 0;
                 }
-                return Bass.ChannelBytes2Seconds(ChannelHandle, Bass.ChannelGetPosition(ChannelHandle));
+                return Bass.ChannelBytes2Seconds(ChannelHandle, Bass.ChannelGetPosition(ChannelHandle)) * 1000;
             }
         }
 
@@ -76,10 +81,10 @@ namespace ZoDream.Player.ViewModels
         private MainViewModel ViewModel;
         private int Current = -1;
 
-        public event ControlValueEventHandler? TimeUpdated;
-        public event ControlEventHandler? Began;
+        public event ControlValueEventHandler<double>? TimeUpdated;
+        public event ControlValueEventHandler<FileItem>? Began;
         public event ControlEventHandler? Ended;
-        public event ControlValueEventHandler? VolumeChanged;
+        public event ControlValueEventHandler<double>? VolumeChanged;
         public event ControlEventHandler? OnPlay;
         public event ControlEventHandler? OnPause;
         public event ControlEventHandler? OnStop;
@@ -237,7 +242,7 @@ namespace ZoDream.Player.ViewModels
             }
             item.Duration = Duration;
             Bass.SampleGetChannel(ChannelHandle);
-            Began?.Invoke(this);
+            Began?.Invoke(this, item);
             await PlayAsync();
             Current = index;
         }
@@ -344,7 +349,7 @@ namespace ZoDream.Player.ViewModels
                 {
                     return;
                 }
-                Bass.ChannelSetPosition(ChannelHandle, Bass.ChannelSeconds2Bytes(ChannelHandle, progress));
+                Bass.ChannelSetPosition(ChannelHandle, Bass.ChannelSeconds2Bytes(ChannelHandle, progress / 1000));
             });
         }
 

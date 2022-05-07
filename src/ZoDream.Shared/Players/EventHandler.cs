@@ -6,5 +6,5 @@ namespace ZoDream.Shared.Players
 {
     public delegate void ControlEventHandler(object sender);
 
-    public delegate void ControlValueEventHandler(object sender, double value = 0);
+    public delegate void ControlValueEventHandler<T>(object sender, T value);
 }

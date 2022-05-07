@@ -28,6 +28,14 @@ namespace ZoDream.Shared.Models
 
         public string Lyrics { get; set; } = string.Empty;
 
+        private bool isPaused = true;
+
+        public bool IsPaused
+        {
+            get => isPaused;
+            set => Set(ref isPaused, value);
+        }
+
         public FileItem()
         {
 
@@ -43,10 +51,16 @@ namespace ZoDream.Shared.Models
                 Name = temp[0];
                 Author = temp[1];
             }
-            var lyricsFile = file.Replace(Path.GetExtension(file), ".lrc");
-            if (File.Exists(lyricsFile))
+            var baseFile = file.Replace(Path.GetExtension(file), "");
+            var lyricsExt = new string[] { ".lrc", ".krc" };
+            foreach (var item in lyricsExt)
             {
-                Lyrics = lyricsFile;
+                var lyricsFile = baseFile + item;
+                if (File.Exists(lyricsFile))
+                {
+                    Lyrics = lyricsFile;
+                    break;
+                }
             }
         }
     }

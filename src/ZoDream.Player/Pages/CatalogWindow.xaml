@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Catalog" Height="450" Width="600"
         WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         DragOver="Window_DragOver"
         Drop="Window_Drop"

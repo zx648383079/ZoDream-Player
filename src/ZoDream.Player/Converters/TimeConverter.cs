@@ -13,7 +13,7 @@ namespace ZoDream.Player.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Time.Format((double)value);
+            return Time.Format((double)value, false);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

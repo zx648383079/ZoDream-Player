@@ -44,30 +44,62 @@ namespace ZoDream.Shared.Readers
                     continue;
                 }
                 var item = SplitLine(line);
-                if (IsTagLine(item.Item1))
+                if (item.Item1.Length < 1)
                 {
-                    FormatTagLine(ref res, item.Item1);
+                    res.Items.Add(FormatLyriceLine(string.Empty, item.Item2));
                     continue;
                 }
-                res.Items.Add(FormatLyriceLine(item.Item1, item.Item2));
+                foreach (var tag in item.Item1)
+                {
+                    if (IsTagLine(tag))
+                    {
+                        FormatTagLine(ref res, tag);
+                        continue;
+                    }
+                    res.Items.Add(FormatLyriceLine(tag, item.Item2));
+                }
             }
+            res.Items.Sort((a, b) =>
+            {
+                if (a.Offset < b.Offset)
+                {
+                    return -1;
+                }
+                return a.Offset == b.Offset ? 0 : 1;
+            });
             return res;
         }
-
-        private Tuple<string, string> SplitLine(string line)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="line">可以有多个时间</param>
+        /// <returns></returns>
+        private Tuple<string[], string> SplitLine(string line)
         {
             if (string.IsNullOrWhiteSpace(line))
             {
-                return new Tuple<string, string>(string.Empty, line);
+                return new Tuple<string[], string>(Array.Empty<string>(), line);
             }
-            var time = line.IndexOf('[');
-            var text = line.IndexOf(']', time);
-            if (time < 0 || text < 0)
+            var items = new List<string>();
+            var last = 0;
+            while (true)
             {
-                return new Tuple<string, string>(string.Empty, line);
+                var time = line.IndexOf('[', last);
+                if (time < 0)
+                {
+                    break;
+                }
+                var text = line.IndexOf(']', time);
+                if (text < 0)
+                {
+                    break;
+                }
+                time++;
+                items.Add(line.Substring(time, text - time));
+                last = text + 1;
             }
-            time++;
-            return new Tuple<string, string>(line.Substring(time, text - time).Trim(), line.Substring(text + 1).Trim());
+            return new Tuple<string[], string>(items.ToArray(),
+                last >= line.Length ? string.Empty : line.Substring(last).Trim());
         }
 
         private bool IsTagLine(string tag)

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZoDream.Shared.Models;
 
 namespace ZoDream.Player.Controls
 {
@@ -44,11 +45,115 @@ namespace ZoDream.Player.Controls
     ///     <MyNamespace:LyricsPanel/>
     ///
     /// </summary>
+    [TemplatePart(Name = ScrollBarName, Type = typeof(ScrollViewer))]
+    [TemplatePart(Name = LyricsBoxName, Type = typeof(StackPanel))]
     public class LyricsPanel : Control
     {
+        public const string ScrollBarName = "PART_ScrollBar";
+        public const string LyricsBoxName = "PART_LyricsBox";
+
         static LyricsPanel()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LyricsPanel), new FrameworkPropertyMetadata(typeof(LyricsPanel)));
+        }
+
+        public IList<LyricsItem> Items
+        {
+            get { return (IList<LyricsItem>)GetValue(ItemsProperty); }
+            set { SetValue(ItemsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Items.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ItemsProperty =
+            DependencyProperty.Register("Items", typeof(IList<LyricsItem>), typeof(LyricsPanel), new PropertyMetadata(null, (d, e) =>
+            {
+                (d as LyricsPanel)?.RefreshView();
+            }));
+
+
+
+
+        public double CurrentTime
+        {
+            get { return (double)GetValue(CurrentTimeProperty); }
+            set { SetValue(CurrentTimeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CurrentTime.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CurrentTimeProperty =
+            DependencyProperty.Register("CurrentTime", typeof(double), typeof(LyricsPanel), new PropertyMetadata(.0, (d, e) =>
+            {
+                (d as LyricsPanel)?.TimeUpdate();
+            }));
+
+        private ScrollViewer? ScrollBar;
+        private StackPanel? MainBox;
+
+        public event EventHandler<LyricsItem>? ItemChanged;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            ScrollBar = GetTemplateChild(ScrollBarName) as ScrollViewer;
+            MainBox = GetTemplateChild(LyricsBoxName) as StackPanel;
+        }
+
+
+        private void RefreshView()
+        {
+            if (MainBox == null || ScrollBar == null)
+            {
+                return;
+            }
+            MainBox.Children.Clear();
+            ScrollBar.ScrollToHome();
+            if (Items == null)
+            {
+                return;
+            }
+            foreach (var item in Items)
+            {
+                var line = new LyricsPanelItem
+                {
+                    Source = item
+                };
+                MainBox.Children.Add(line);
+                line.MouseDoubleClick += Line_MouseDoubleClick;
+            }
+        }
+
+        private void Line_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ItemChanged?.Invoke(this, (sender as LyricsPanelItem).Source);
+        }
+
+        private void TimeUpdate()
+        {
+            if (MainBox == null || ScrollBar == null)
+            {
+                return;
+            }
+            var isScroll = false;
+            MainBox.Margin = new Thickness(0, ActualHeight / 2, 0, ActualHeight / 2);
+            foreach (LyricsPanelItem item in MainBox.Children)
+            {
+                if (item is null)
+                {
+                    continue;
+                }
+                var isActive = item.Source.IsActive(CurrentTime);
+                item.FontSize = isActive ? 20 : 16;
+                // item.HorizontalAlignment = HorizontalAlignment.Center;
+                if (isActive && !isScroll)
+                {
+                    isScroll = true;
+                    var currentScrollPosition = ScrollBar.VerticalOffset;
+                    var point = new Point(0, currentScrollPosition);
+                    var targetPosition = item.TransformToVisual(ScrollBar).Transform(point);
+                    ScrollBar.ScrollToVerticalOffset(targetPosition.Y - (ActualHeight - item.ActualHeight) / 2);
+                }
+                item.Offset = item.Source.GetOffset(CurrentTime);
+            }
         }
     }
 }

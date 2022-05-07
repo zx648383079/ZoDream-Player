@@ -102,5 +102,18 @@ namespace ZoDream.Player.Pages
             }
             _ = ViewModel.Player.PlayAsync(item);
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Player.Began += Player_Began;
+        }
+
+        private void Player_Began(object sender, FileItem value)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                CatalogBox.SelectedIndex = ViewModel.Player.IndexOf(value);
+            });
+        }
     }
 }
