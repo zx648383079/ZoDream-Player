@@ -24,6 +24,8 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Content="&#xE141;" Style="{StaticResource MenuIconBtn}"/>
+                <Button Content="&#xE183;" Style="{StaticResource MenuIconBtn}"/>
                 <Button x:Name="CloseBtn" Click="CloseBtn_Click" Content="&#xE106;" Style="{StaticResource MenuIconBtn}"/>
             </StackPanel>
         </Grid>

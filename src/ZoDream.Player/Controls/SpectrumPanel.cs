@@ -328,10 +328,12 @@ namespace ZoDream.Player.Controls
                 len = radius - h;
                 var x2 = centerX + Math.Sin(angle) * len;
                 var y2 = centerY - Math.Cos(angle) * len;
-
+                if (x2 == x && y2 == y)
+                {
+                    return;
+                }
                 d.DrawLine(pen, new Point(x, y), new Point(x2, y2));
                 d.DrawLine(pen, new Point(centerX * 2 - x, y), new Point(centerX * 2 - x2, y2));
-
             });
         }
 

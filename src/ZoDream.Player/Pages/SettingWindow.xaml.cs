@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ZoDream.Player.ViewModels;
 
 namespace ZoDream.Player.Pages
 {
@@ -19,9 +20,13 @@ namespace ZoDream.Player.Pages
     /// </summary>
     public partial class SettingWindow : Window
     {
-        public SettingWindow()
+        public SettingWindow(SettingViewModel viewModel)
         {
             InitializeComponent();
+            ViewModel = viewModel;
+            DataContext = viewModel;
         }
+
+        public SettingViewModel ViewModel;
     }
 }

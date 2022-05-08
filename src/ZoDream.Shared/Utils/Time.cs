@@ -29,6 +29,15 @@ namespace ZoDream.Shared.Utils
             return string.Join(":", items);
         }
 
+        public static string MinuteFormat(double val, bool isSecond = true)
+        {
+            if (!isSecond)
+            {
+                val /= 1000;
+            }
+            return $"{TwoPad(val / 60)}:{TwoPad(val % 60)}";
+        }
+
         private static string ToFixed(double v)
         {
             return Math.Floor(v).ToString("00");

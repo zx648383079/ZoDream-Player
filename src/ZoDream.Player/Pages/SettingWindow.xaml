@@ -44,7 +44,7 @@
                             <TextBlock Text="频谱样式" Style="{StaticResource HeaderTb}"/>
                             <ctl:SwitchInput OnLabel="圆形" OffLabel="柱状"/>
                             <TextBlock Text="频谱颜色" Style="{StaticResource HeaderTb}"/>
-                            <TextBox HorizontalAlignment="Left" Width="100"/>
+                            <ctl:ColorInput HorizontalAlignment="Left" Width="100"/>
                         </StackPanel>
                     </GroupBox>
                 </ScrollViewer>
@@ -57,10 +57,16 @@
                             <ctl:SwitchInput/>
                             <TextBlock Text="显示桌面歌词" Style="{StaticResource HeaderTb}"/>
                             <ctl:SwitchInput/>
+                            <TextBlock Text="歌词固定" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
+                            <TextBlock Text="歌词置顶" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
+                            <TextBlock Text="窗口透明度" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput/>
                             <TextBlock Text="歌词默认颜色" Style="{StaticResource HeaderTb}"/>
-                            <TextBox  HorizontalAlignment="Left" Width="100"/>
+                            <ctl:ColorInput  HorizontalAlignment="Left" Width="100"/>
                             <TextBlock Text="歌词过渡颜色" Style="{StaticResource HeaderTb}"/>
-                            <TextBox  HorizontalAlignment="Left" Width="100"/>
+                            <ctl:ColorInput  HorizontalAlignment="Left" Width="100"/>
                             <TextBlock Text="歌词字体" Style="{StaticResource HeaderTb}"/>
                             <ComboBox/>
                             <TextBlock Text="歌词字体大小" Style="{StaticResource HeaderTb}"/>

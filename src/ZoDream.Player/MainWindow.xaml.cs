@@ -17,6 +17,7 @@ using ZoDream.Player.Pages;
 using ZoDream.Player.ViewModels;
 using ZoDream.Shared.Models;
 using ZoDream.Shared.Readers;
+using ZoDream.Shared.Utils;
 
 namespace ZoDream.Player
 {
@@ -121,7 +122,7 @@ namespace ZoDream.Player
             Catalog.OpenPicker();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.Player.Began += Player_Began;
             ViewModel.Player.Ended += Player_Ended;
@@ -129,6 +130,7 @@ namespace ZoDream.Player
             ViewModel.Player.OnPlay += Player_OnPlay;
             ViewModel.Player.TimeUpdated += Player_TimeUpdated;
             ViewModel.Player.OnStop += Player_OnStop;
+            await ViewModel.LoadOptionAsync();
         }
 
         private void Player_OnStop(object sender)
@@ -147,6 +149,7 @@ namespace ZoDream.Player
             {
                 ProgressBar.Value = value;
                 LyricsPanel.CurrentTime = value;
+                ProgressTb.Text = Time.MinuteFormat(value, false);
                 if (SpectRefreshTime < 1)
                 {
                     SpectPanel.Items = ViewModel.Player.ChannelData(128);
@@ -180,7 +183,9 @@ namespace ZoDream.Player
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                ProgressBar.Max = ViewModel.Player.Duration;
+                ProgressBar.Max = item.Duration;
+                NameTb.Text = item.Name;
+                DurationTb.Text = Time.MinuteFormat(item.Duration, false);
             });
             ViewModel.IsPaused = false;
             _ = LoadLyricsAsync(item.Lyrics, ProgressBar.Max);
@@ -188,14 +193,7 @@ namespace ZoDream.Player
 
         private async Task LoadLyricsAsync(string file, double duration)
         {
-            if (string.IsNullOrWhiteSpace(file))
-            {
-                LyricsPanel.Items = null;
-                return;
-            }
-            var reader = new LrcReader();
-            var lyrics = await reader.ReadAsync(file);
-            lyrics?.ApplyDuration((int)duration);
+            var lyrics = await ViewModel.LoadLyricsAsync(file, duration);
             App.Current.Dispatcher.Invoke(() =>
             {
                 LyricsPanel.Items = lyrics == null ? null : lyrics.Items;
@@ -230,7 +228,15 @@ namespace ZoDream.Player
 
         private void ShowSetting()
         {
-            new SettingWindow().ShowDialog();
+            var model = new SettingViewModel(ViewModel.Option);
+            var page = new SettingWindow(model);
+            page.Show();
+            model.PropertyChanged += (_, e) =>
+            {
+                ViewModel.Option = model.ToOption();
+
+                _ = ViewModel.SaveOptionAsync();
+            };
         }
 
         private void ShowLyrics()
