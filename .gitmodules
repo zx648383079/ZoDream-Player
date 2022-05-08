@@ -1,4 +1,3 @@
 [submodule "shared"]
-	path = shared/ZoDream.Shared.Controls
-	url = https://github.com/zx648383079/ZoDream.Studio/tree/src/ZoDream.Shared.Controls
-	ignore = all
+	path = shared
+	url = https://github.com/zx648383079/ZoDream.Studio.git
