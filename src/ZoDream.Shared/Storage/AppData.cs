@@ -42,13 +42,14 @@ namespace ZoDream.Shared.Storage
         {
             SaveToken.Cancel();
             SaveToken = new CancellationTokenSource();
+            var token = SaveToken.Token;
             return Task.Factory.StartNew(() =>
             {
                 if (MaxLazy > 0)
                 {
                     Thread.Sleep(MaxLazy * 1000);
                 }
-                if (SaveToken.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                 {
                     return false;
                 }
@@ -61,7 +62,7 @@ namespace ZoDream.Shared.Storage
                 {
                     return false;
                 }
-            }, SaveToken.Token);
+            }, token);
         }
 
         public static Task<bool> SaveAsync<T>(T data)

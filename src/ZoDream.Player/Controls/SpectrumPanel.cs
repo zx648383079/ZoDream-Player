@@ -321,7 +321,7 @@ namespace ZoDream.Player.Controls
             RenderEach(drawingContext, 0, columnCount, Rate, centerY - radius, (d, _, i, _, _, h) =>
             {
                 var len = radius + h;
-                var angle = i * preAngle;
+                var angle = ToDeg(i * preAngle);
                 var x = centerX + Math.Sin(angle) * len;
                 var y = centerY - Math.Cos(angle) * len;
 
@@ -352,5 +352,9 @@ namespace ZoDream.Player.Controls
             });
         }
 
+        private static double ToDeg(double a)
+        {
+            return a * Math.PI / 180;
+        }
     }
 }

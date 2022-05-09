@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ZoDream.Player.Pages"
         xmlns:ctl="clr-namespace:ZoDream.Shared.Controls;assembly=ZoDream.Shared.Controls"
         mc:Ignorable="d"
         Title="Setting" Height="450" Width="800" 
@@ -16,6 +15,7 @@
             </Style>
             <Style TargetType="ComboBox">
                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="MinWidth" Value="100"/>
                 <Setter Property="Height" Value="30"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
@@ -24,6 +24,17 @@
             </Style>
             <Style TargetType="ScrollViewer">
                 <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            </Style>
+            <Style TargetType="ctl:ProgressBar">
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="ctl:ColorInput">
+                <Setter Property="Width" Value="100"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+            <Style TargetType="ctl:NumberInput">
+                <Setter Property="Width" Value="100"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -34,47 +45,59 @@
                     <GroupBox Header="视觉体验">
                         <StackPanel>
                             <TextBlock Text="显示歌曲信息" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
+                            <ctl:SwitchInput Value="{Binding InfoVisible, Mode=TwoWay}"/>
                             <TextBlock Text="播放模式" Style="{StaticResource HeaderTb}"/>
-                            <ComboBox/>
+                            <ComboBox ItemsSource="{Binding ModeItems}" 
+                                      SelectedValue="{Binding Mode, Mode=TwoWay}"/>
                             <TextBlock Text="音量大小" Style="{StaticResource HeaderTb}"/>
-                            <ComboBox/>
+                            <ctl:ProgressBar Max="127" Value="{Binding Volume, Mode=TwoWay}"/>
                             <TextBlock Text="显示频谱" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
+                            <ctl:SwitchInput Value="{Binding SpectrumVisible, Mode=TwoWay}"/>
                             <TextBlock Text="频谱样式" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput OnLabel="圆形" OffLabel="柱状"/>
+                            <ComboBox ItemsSource="{Binding SpectrumItems}" 
+                                      SelectedValue="{Binding SpectrumType, Mode=TwoWay}"/>
                             <TextBlock Text="频谱颜色" Style="{StaticResource HeaderTb}"/>
-                            <ctl:ColorInput HorizontalAlignment="Left" Width="100"/>
+                            <ctl:ColorInput Value="{Binding SpectrumColor, Mode=TwoWay}" />
                         </StackPanel>
                     </GroupBox>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="歌词">
                 <ScrollViewer>
-                    <GroupBox Header="歌词显示">
-                        <StackPanel>
-                            <TextBlock Text="显示歌词" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
-                            <TextBlock Text="显示桌面歌词" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
-                            <TextBlock Text="歌词固定" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
-                            <TextBlock Text="歌词置顶" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
-                            <TextBlock Text="窗口透明度" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
-                            <TextBlock Text="歌词默认颜色" Style="{StaticResource HeaderTb}"/>
-                            <ctl:ColorInput  HorizontalAlignment="Left" Width="100"/>
-                            <TextBlock Text="歌词过渡颜色" Style="{StaticResource HeaderTb}"/>
-                            <ctl:ColorInput  HorizontalAlignment="Left" Width="100"/>
-                            <TextBlock Text="歌词字体" Style="{StaticResource HeaderTb}"/>
-                            <ComboBox/>
-                            <TextBlock Text="歌词字体大小" Style="{StaticResource HeaderTb}"/>
-                            <ctl:NumberInput/>
-                            <TextBlock Text="歌词文件关联" Style="{StaticResource HeaderTb}"/>
-                            <ctl:SwitchInput/>
-                        </StackPanel>
-                    </GroupBox>
+                    <StackPanel>
+                        <GroupBox Header="歌词显示">
+                            <StackPanel>
+                                <TextBlock Text="显示歌词" Style="{StaticResource HeaderTb}"/>
+                                <ctl:SwitchInput Value="{Binding LyricsVisible, Mode=TwoWay}"/>
+                                <TextBlock Text="歌词默认颜色" Style="{StaticResource HeaderTb}"/>
+                                <ctl:ColorInput Value="{Binding LyricsFromColor, Mode=TwoWay}"/>
+                                <TextBlock Text="歌词过渡颜色" Style="{StaticResource HeaderTb}"/>
+                                <ctl:ColorInput Value="{Binding LyricsToColor, Mode=TwoWay}"/>
+                                <TextBlock Text="歌词字体" Style="{StaticResource HeaderTb}"/>
+                                <ComboBox ItemsSource="{Binding FontItems}" SelectedValue="{Binding LyricsFontFamily, Mode=TwoWay}"/>
+                                <TextBlock Text="歌词字体大小" Style="{StaticResource HeaderTb}"/>
+                                <ctl:NumberInput Min="5" Max="40" Value="{Binding LyricsFontSize, Mode=TwoWay}"/>
+                                <TextBlock Text="过渡字体大小" Style="{StaticResource HeaderTb}"/>
+                                <ctl:NumberInput Min="10" Max="100" Value="{Binding LyricsActiveFontSize, Mode=TwoWay}"/>
+                                <TextBlock Text="歌词文件关联" Style="{StaticResource HeaderTb}"/>
+                                <ctl:SwitchInput/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="桌面歌词">
+                            <StackPanel>
+                                <TextBlock Text="显示桌面歌词" Style="{StaticResource HeaderTb}"/>
+                                <ctl:SwitchInput Value="{Binding DesktopLyricsVisible, Mode=TwoWay}"/>
+                                <TextBlock Text="窗口固定" Style="{StaticResource HeaderTb}"/>
+                                <ctl:SwitchInput Value="{Binding DesktopLyricsPin, Mode=TwoWay}"/>
+                                <TextBlock Text="窗口置顶" Style="{StaticResource HeaderTb}"/>
+                                <ctl:SwitchInput Value="{Binding DesktopLyricsTop, Mode=TwoWay}"/>
+                                <TextBlock Text="窗口透明度" Style="{StaticResource HeaderTb}"/>
+                                <ctl:ProgressBar Max="100" Value="{Binding DesktopLyricsOpacity, Mode=TwoWay}"/>
+                                <TextBlock Text="歌词字体大小" Style="{StaticResource HeaderTb}"/>
+                                <ctl:NumberInput Min="5" Max="40" Value="{Binding DesktopLyricsFontSize, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="插件">

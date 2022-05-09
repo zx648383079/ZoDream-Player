@@ -34,7 +34,7 @@
         <ctl:SpectrumPanel x:Name="SpectPanel" Grid.Row="1" Kind="RingLine"/>
         <ctl:LyricsPanel x:Name="LyricsPanel" Grid.Row="1" ItemChanged="LyricsPanel_ItemChanged"/>
         <sctl:ProgressBar x:Name="ProgressBar" Grid.Row="2" Margin="10,0" ValueChanged="ProgressBar_ValueChanged"/>
-        <Grid Grid.Row="3" HorizontalAlignment="Left" 
+        <Grid x:Name="InfoPanel" Grid.Row="3" HorizontalAlignment="Left" 
               VerticalAlignment="Center" Margin="10,0">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -44,7 +44,7 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="NameTb" Grid.Column="1"/>
+            <TextBlock x:Name="NameTb" Grid.Column="1" FontSize="20"/>
             <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
                 <TextBlock x:Name="ProgressTb" Text="00"/>
                 <TextBlock Text="/"/>

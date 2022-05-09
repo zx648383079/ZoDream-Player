@@ -103,9 +103,14 @@ namespace ZoDream.Player.ViewModels
             return Lyrics;
         }
 
-        public async Task LoadOptionAsync()
+        public async Task<AppOption> LoadOptionAsync()
         {
-            await AppData.LoadAsync<AppOption>();
+            var option = await AppData.LoadAsync<AppOption>();
+            if (option != null)
+            {
+                Option = option;
+            }
+            return Option;
         }
 
         public async Task SaveOptionAsync()

@@ -35,7 +35,7 @@ namespace ZoDream.Shared.Utils
             {
                 val /= 1000;
             }
-            return $"{TwoPad(val / 60)}:{TwoPad(val % 60)}";
+            return $"{ToFixed(val / 60)}:{ToFixed(val % 60)}";
         }
 
         private static string ToFixed(double v)

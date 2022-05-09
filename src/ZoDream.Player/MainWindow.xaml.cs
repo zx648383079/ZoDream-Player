@@ -50,8 +50,8 @@ namespace ZoDream.Player
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
         {
             Catalog.Close();
-            Window_Unloaded(sender, e);
             Close();
+            Window_Unloaded(sender, e);
         }
 
         private void MinBtn_Click(object sender, RoutedEventArgs e)
@@ -122,7 +122,7 @@ namespace ZoDream.Player
             Catalog.OpenPicker();
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.Player.Began += Player_Began;
             ViewModel.Player.Ended += Player_Ended;
@@ -130,7 +130,15 @@ namespace ZoDream.Player
             ViewModel.Player.OnPlay += Player_OnPlay;
             ViewModel.Player.TimeUpdated += Player_TimeUpdated;
             ViewModel.Player.OnStop += Player_OnStop;
-            await ViewModel.LoadOptionAsync();
+            LoadOption();
+        }
+
+        private async void LoadOption()
+        {
+            var option = await ViewModel.LoadOptionAsync();
+            InfoPanel.Visibility = Utils.Util.ToVisible(option.InfoVisible);
+            SpectPanel.Kind = option.SpectrumType;
+            SpectPanel.Foreground = Utils.Util.ToBrush(option.SpectrumColor);
         }
 
         private void Player_OnStop(object sender)
@@ -233,8 +241,18 @@ namespace ZoDream.Player
             page.Show();
             model.PropertyChanged += (_, e) =>
             {
+                switch (e.PropertyName)
+                {
+                    case nameof(model.SpectrumType):
+                        SpectPanel.Kind = model.SpectrumType;
+                        break;
+                    case nameof(model.SpectrumColor):
+                        SpectPanel.Foreground = Utils.Util.ToBrush(model.SpectrumColor);
+                        break;
+                    default:
+                        break;
+                }
                 ViewModel.Option = model.ToOption();
-
                 _ = ViewModel.SaveOptionAsync();
             };
         }

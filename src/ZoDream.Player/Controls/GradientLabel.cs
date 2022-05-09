@@ -155,10 +155,25 @@ namespace ZoDream.Player.Controls
             }
             // drawingContext.DrawLine(new Pen(new SolidColorBrush(Colors.Green), 1), new Point(1, 1), new Point(100, 1));
             var font = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
+            var y = Padding.Top;
+            var format = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                            font, FontSize, new SolidColorBrush(FromColor), 1.25);
+            var offset = text.Length * Offset;
+            if (ActualWidth > format.WidthIncludingTrailingWhitespace)
+            {
+                if (offset <= 0)
+                {
+                    RenderText(drawingContext, format, GetLeft(format.WidthIncludingTrailingWhitespace), y);
+                } else
+                {
+                    RenderText(drawingContext, font, text, y, offset);
+                }
+                
+                Height = y + format.Height + Padding.Bottom;
+                return;
+            }
             var count = (int)Math.Floor(ActualWidth / FontSize);
             var i = 0;
-            var y = Padding.Top;
-            var offset = text.Length * Offset;
             while (i < text.Length)
             {
                 var len = text.Length - i;
@@ -171,6 +186,7 @@ namespace ZoDream.Player.Controls
                 y += height + Padding.Top;
                 offset -= len;
             }
+            Height = y;
         }
 
         private double RenderText(DrawingContext drawingContext, Typeface font, string text, double y, double offset)
@@ -183,7 +199,6 @@ namespace ZoDream.Player.Controls
             {
                 return RenderText(drawingContext, font, new SolidColorBrush(ToColor), text, y);
             }
-            var spaceWidth = FontSize * .3;
             var fromBrush = new SolidColorBrush(FromColor);
             var format = new FormattedText(text,
                     CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
@@ -200,15 +215,12 @@ namespace ZoDream.Player.Controls
                     CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                             font, FontSize, new SolidColorBrush(ToColor), 1.25);
                 RenderText(drawingContext, format, x, y);
-                startX = format.Width;
-                if (line[^1] == ' ')
-                {
-                    startX += spaceWidth;
-                }
+                startX = format.WidthIncludingTrailingWhitespace;
             }
             if (start < offset)
             {
                 var code = text.Substring(start, 1);
+                
                 if (code != " ")
                 {
                     var off = offset - start;
@@ -223,10 +235,13 @@ namespace ZoDream.Player.Controls
                         CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                                 font, FontSize, new LinearGradientBrush(items, 0), 1.25);
                     RenderText(drawingContext, format, x + startX, y);
-                    startX += format.Width;
+                    startX += format.WidthIncludingTrailingWhitespace;
                 } else
                 {
-                    startX += spaceWidth;
+                    format = new FormattedText(code,
+                        CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                                font, FontSize, fromBrush, 1.25);
+                    startX += format.WidthIncludingTrailingWhitespace;
                 }
                 start++;
             }

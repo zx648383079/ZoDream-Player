@@ -86,6 +86,20 @@ namespace ZoDream.Player.Controls
                 (d as LyricsPanel)?.TimeUpdate();
             }));
 
+
+
+        public double ActiveFontSize
+        {
+            get { return (double)GetValue(ActiveFontSizeProperty); }
+            set { SetValue(ActiveFontSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ActiveFontSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ActiveFontSizeProperty =
+            DependencyProperty.Register("ActiveFontSize", typeof(double), typeof(LyricsPanel), new PropertyMetadata(20.0));
+
+
+
         private ScrollViewer? ScrollBar;
         private StackPanel? MainBox;
 
@@ -142,7 +156,7 @@ namespace ZoDream.Player.Controls
                     continue;
                 }
                 var isActive = item.Source.IsActive(CurrentTime);
-                item.FontSize = isActive ? 20 : 16;
+                item.FontSize = isActive ? ActiveFontSize : FontSize;
                 // item.HorizontalAlignment = HorizontalAlignment.Center;
                 if (isActive && !isScroll)
                 {

@@ -10,14 +10,14 @@
         Topmost="True"
         ShowInTaskbar="False"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Loaded="Window_Loaded"
+        Unloaded="Window_Unloaded"
         Style="{StaticResource CustomWin}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <ctl:GradientLabel HorizontalContentAlignment="Left"/>
-        <ctl:GradientLabel HorizontalContentAlignment="Right" Grid.Row="1"/>
+        <StackPanel x:Name="LyricsPanel" VerticalAlignment="Center">
+            <ctl:GradientLabel HorizontalContentAlignment="Left" FontSize="20"/>
+            <ctl:GradientLabel HorizontalContentAlignment="Right"  FontSize="20"/>
+        </StackPanel>
         <Grid Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
