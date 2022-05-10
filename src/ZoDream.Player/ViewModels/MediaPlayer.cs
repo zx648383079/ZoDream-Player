@@ -277,6 +277,10 @@ namespace ZoDream.Player.ViewModels
                     await PlayAsync(i);
                     break;
                 case LoopMode.Random:
+                    if (Count < 2)
+                    {
+                        return;
+                    }
                     var rnd = new Random();
                     await PlayAsync(rnd.Next(Count));
                     break;
