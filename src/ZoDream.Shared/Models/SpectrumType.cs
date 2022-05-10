@@ -7,7 +7,8 @@ namespace ZoDream.Shared.Models
     public enum SpectrumType
     {
         Columnar,
-        SymmetryColumnar,
+        SymmetryColumnar, // 上下对称
+        InverseColumnar, // 左右镜像
         Ring,
         SymmetryRing,
         RingLine,

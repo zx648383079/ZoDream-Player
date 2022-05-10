@@ -115,6 +115,9 @@ namespace ZoDream.Player.Controls
                 case SpectrumType.SymmetryColumnar:
                     RenderSymmetryColumnar(drawingContext);
                     break;
+                case SpectrumType.InverseColumnar:
+                    RenderInverseColumnar(drawingContext);
+                    break;
                 case SpectrumType.Ring:
                     RenderRing(drawingContext);
                     break;
@@ -142,7 +145,7 @@ namespace ZoDream.Player.Controls
             {
                 func?.Invoke(drawingContext, pen, i, outerWidth * i, y,
                     dataIndex >= 0 && dataIndex < Items.Length ?
-                    Items[dataIndex] * preRectHeight * rate : 0);
+                    Math.Min(Items[dataIndex] * preRectHeight * rate, maxHeight) : 0);
                 dataIndex++;
             }
         }
@@ -164,10 +167,10 @@ namespace ZoDream.Player.Controls
         private void RenderColumnar(DrawingContext drawingContext, Pen pen, int index, 
             double x, double y, double height, bool hasHat)
         {
-            RenderColumnar(drawingContext, pen, index, x, y, height, hasHat ? GetHat(index, height) : null);
+            RenderColumnar(drawingContext, pen, x, y, height, hasHat ? GetHat(index, height) : null);
         }
 
-        private void RenderColumnar(DrawingContext drawingContext, Pen pen, int index,
+        private void RenderColumnar(DrawingContext drawingContext, Pen pen,
             double x, double y, double height, HatItem? hat)
         {
             var rectHeight = RectHeight > 0 ? RectHeight : height;
@@ -281,6 +284,21 @@ namespace ZoDream.Player.Controls
         }
 
 
+        private void RenderInverseColumnar(DrawingContext drawingContext)
+        {
+            var outerWidth = ColumnWidth + Space;
+            var centerX = ActualWidth / 2;
+            var leftX = centerX - Space / 2;
+            var rightX = centerX + Space / 2;
+            RenderEach(drawingContext, 0,
+                (int)Math.Floor(centerX / outerWidth),
+                Rate, ActualHeight, (d, p, i, x, y, h) =>
+                {
+                    RenderColumnar(d, p, i, x + rightX, y, h);
+                    RenderColumnar(d, p, leftX - x, y, h, HatItems[i]);
+                });
+        }
+
         private void RenderSymmetryColumnar(DrawingContext drawingContext)
         {
             var outerWidth = ColumnWidth + Space;
@@ -347,7 +365,7 @@ namespace ZoDream.Player.Controls
                 drawingContext.Pop();
                 tranform = new RotateTransform(-a, cx, cy);
                 drawingContext.PushTransform(tranform);
-                RenderColumnar(d, p, i, x, y, h, HatItems[i]);
+                RenderColumnar(d, p, x, y, h, HatItems[i]);
                 drawingContext.Pop();
             });
         }

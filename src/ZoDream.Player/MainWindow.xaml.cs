@@ -139,6 +139,10 @@ namespace ZoDream.Player
             InfoPanel.Visibility = Utils.Util.ToVisible(option.InfoVisible);
             SpectPanel.Kind = option.SpectrumType;
             SpectPanel.Foreground = Utils.Util.ToBrush(option.SpectrumColor);
+            SpectPanel.Visibility = Utils.Util.ToVisible(option.SpectrumVisible);
+            LyricsPanel.Visibility = Utils.Util.ToVisible(option.LyricsVisible);
+            ViewModel.Player.LoopMode = option.Mode;
+
         }
 
         private void Player_OnStop(object sender)
@@ -169,13 +173,19 @@ namespace ZoDream.Player
 
         private void Player_OnPlay(object sender)
         {
-            ViewModel.IsPaused = false;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                ViewModel.IsPaused = false;
+            });
             SpectRefreshTime = 0;
         }
 
         private void Player_OnPause(object sender)
         {
-            ViewModel.IsPaused = true;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                ViewModel.IsPaused = true;
+            });
         }
 
         private void Player_Ended(object sender)
@@ -192,11 +202,11 @@ namespace ZoDream.Player
             App.Current.Dispatcher.Invoke(() =>
             {
                 ProgressBar.Max = item.Duration;
-                NameTb.Text = item.Name;
+                NameTb.Text = item.Title;
                 DurationTb.Text = Time.MinuteFormat(item.Duration, false);
+                ViewModel.IsPaused = false;
             });
-            ViewModel.IsPaused = false;
-            _ = LoadLyricsAsync(item.Lyrics, ProgressBar.Max);
+            _ = LoadLyricsAsync(item.Lyrics, item.Duration);
         }
 
         private async Task LoadLyricsAsync(string file, double duration)
@@ -248,6 +258,15 @@ namespace ZoDream.Player
                         break;
                     case nameof(model.SpectrumColor):
                         SpectPanel.Foreground = Utils.Util.ToBrush(model.SpectrumColor);
+                        break;
+                    case nameof(model.Mode):
+                        ViewModel.Player.LoopMode = model.Mode;
+                        break;
+                    case nameof(model.SpectrumVisible):
+                        SpectPanel.Visibility = Utils.Util.ToVisible(model.SpectrumVisible);
+                        break;
+                    case nameof(model.LyricsVisible):
+                        LyricsPanel.Visibility = Utils.Util.ToVisible(model.LyricsVisible);
                         break;
                     default:
                         break;

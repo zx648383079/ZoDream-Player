@@ -143,7 +143,15 @@ namespace ZoDream.Player.ViewModels
 
         public void Dispose()
         {
-            StopAsync().GetAwaiter().GetResult();
+            timer.Stop();
+            IsPaused = true;
+            if (ChannelHandle != 0)
+            {
+                Bass.SampleFree(ChannelHandle);
+                Bass.MusicFree(ChannelHandle);
+                ChannelHandle = 0;
+            }
+            Current = -1;
             Bass.Free();
         }
 

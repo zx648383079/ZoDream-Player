@@ -6,6 +6,10 @@ namespace ZoDream.Shared.Models
     public class FileItem : BindableBase
     {
         public string Name { get; set; } = string.Empty;
+        /// <summary>
+        /// 音乐文件的名字
+        /// </summary>
+        public string Title { get; set; } = string.Empty;
 
         public string FileName { get; set; } = string.Empty;
 
@@ -44,7 +48,7 @@ namespace ZoDream.Shared.Models
         public FileItem(string file)
         {
             FileName = file;
-            Name = Path.GetFileNameWithoutExtension(file);
+            Title = Name = Path.GetFileNameWithoutExtension(file);
             if (Name.IndexOf('-') > 0)
             {
                 var temp = Name.Split(new char[] { '-' }, 2);
