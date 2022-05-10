@@ -8,5 +8,8 @@
         <ResourceDictionary Source="/Themes/Lyrics.xaml"/>
         <ResourceDictionary Source="/Themes/Panel.xaml"/>
         <ResourceDictionary Source="/Themes/Play.xaml"/>
+        <ResourceDictionary Source="/Themes/RollLabel.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+
+
 </ResourceDictionary>

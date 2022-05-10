@@ -202,7 +202,7 @@ namespace ZoDream.Player
             App.Current.Dispatcher.Invoke(() =>
             {
                 ProgressBar.Max = item.Duration;
-                NameTb.Text = item.Title;
+                NameTb.Content = item.Title;
                 DurationTb.Text = Time.MinuteFormat(item.Duration, false);
                 ViewModel.IsPaused = false;
             });

@@ -40,7 +40,7 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Grid x:Name="InfoPanel" HorizontalAlignment="Left" 
+            <Grid x:Name="InfoPanel" 
               VerticalAlignment="Center" Margin="10,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -50,7 +50,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="NameTb" Grid.Column="1" TextWrapping="NoWrap" FontSize="20"/>
+                <ctl:RollLabel x:Name="NameTb" Grid.Column="1" FontSize="20"/>
                 <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
                     <TextBlock x:Name="ProgressTb" Text="00"/>
                     <TextBlock Text="/"/>
