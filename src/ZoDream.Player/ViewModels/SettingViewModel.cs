@@ -18,9 +18,9 @@ namespace ZoDream.Player.ViewModels
 
         public SettingViewModel(AppOption option)
         {
-            ;
             Source = option;
             InfoVisible = Source.InfoVisible;
+            TitleRoll = Source.TitleRoll;
             Mode = Source.Mode;
             Volume = Source.Volume;
             SpectrumVisible = Source.SpectrumVisible;
@@ -74,6 +74,15 @@ namespace ZoDream.Player.ViewModels
             get => infoVisible;
             set => Set(ref infoVisible, value);
         }
+
+        private bool titleRoll;
+
+        public bool TitleRoll
+        {
+            get => titleRoll;
+            set => Set(ref titleRoll, value);
+        }
+
 
         private LoopMode mode = LoopMode.None;
 
@@ -209,6 +218,7 @@ namespace ZoDream.Player.ViewModels
         public AppOption ToOption()
         {
             Source.InfoVisible = InfoVisible;
+            Source.TitleRoll = TitleRoll;
             Source.Mode = Mode;
             Source.Volume = Volume;
             Source.SpectrumVisible = SpectrumVisible;

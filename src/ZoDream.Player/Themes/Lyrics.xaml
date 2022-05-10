@@ -29,6 +29,8 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <StackPanel>
                             <local:GradientLabel x:Name="PART_TextTb"
+                                                 ToColor="{TemplateBinding ToColor}"
+                                                 FromColor="{TemplateBinding FromColor}"
                                                  Offset="{TemplateBinding Offset}"
                                                  FontSize="{TemplateBinding FontSize}"/>
                             <TextBlock x:Name="PART_TransTb"  FontSize="{TemplateBinding FontSize}" HorizontalAlignment="Center"/>

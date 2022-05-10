@@ -99,6 +99,29 @@ namespace ZoDream.Player.Controls
             DependencyProperty.Register("ActiveFontSize", typeof(double), typeof(LyricsPanel), new PropertyMetadata(20.0));
 
 
+        public Color FromColor
+        {
+            get { return (Color)GetValue(FromColorProperty); }
+            set { SetValue(FromColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FromColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FromColorProperty =
+            DependencyProperty.Register("FromColor", typeof(Color), typeof(LyricsPanel), new PropertyMetadata(Colors.Black));
+
+
+
+        public Color ToColor
+        {
+            get { return (Color)GetValue(ToColorProperty); }
+            set { SetValue(ToColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ToColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ToColorProperty =
+            DependencyProperty.Register("ToColor", typeof(Color), typeof(LyricsPanel), new PropertyMetadata(Colors.Red));
+
+
 
         private ScrollViewer? ScrollBar;
         private StackPanel? MainBox;
@@ -129,7 +152,9 @@ namespace ZoDream.Player.Controls
             {
                 var line = new LyricsPanelItem
                 {
-                    Source = item
+                    Source = item,
+                    FromColor = FromColor,
+                    ToColor = ToColor,
                 };
                 MainBox.Children.Add(line);
                 line.MouseDoubleClick += Line_MouseDoubleClick;
@@ -156,6 +181,8 @@ namespace ZoDream.Player.Controls
                     continue;
                 }
                 var isActive = item.Source.IsActive(CurrentTime);
+                item.FromColor = FromColor;
+                item.ToColor = ToColor;
                 item.FontSize = isActive ? ActiveFontSize : FontSize;
                 // item.HorizontalAlignment = HorizontalAlignment.Center;
                 if (isActive && !isScroll)

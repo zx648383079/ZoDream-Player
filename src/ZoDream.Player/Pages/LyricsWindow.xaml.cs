@@ -51,13 +51,17 @@ namespace ZoDream.Player.Pages
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             App.ViewModel.Player.TimeUpdated += Player_TimeUpdated;
-            Topmost = ViewModel.Option.DesktopLyricsTop;
-            Background = new SolidColorBrush(ColorHelper.FromRGBA(255, 255, 255, ViewModel.Option.DesktopLyricsOpacity / 100));
+            var option = ViewModel.Option;
+            Topmost = option.DesktopLyricsTop;
+            Background = new SolidColorBrush(ColorHelper.FromRGBA(255, 255, 255, option.DesktopLyricsOpacity / 100));
             foreach (var item in LyricsPanel.Children)
             {
                 if (item is GradientLabel label)
                 {
-                    label.FontSize = ViewModel.Option.DesktopLyricsFontSize;
+                    label.FontFamily = Utils.Util.ToFont(option.LyricsFontFamily);
+                    label.FromColor = ColorHelper.From(option.LyricsFromColor);
+                    label.ToColor = ColorHelper.From(option.LyricsToColor);
+                    label.FontSize = option.DesktopLyricsFontSize;
                 }
             }
         }

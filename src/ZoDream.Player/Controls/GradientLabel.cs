@@ -94,8 +94,6 @@ namespace ZoDream.Player.Controls
             DependencyProperty.Register("ToColor", typeof(Color), typeof(GradientLabel), new PropertyMetadata(Colors.Red));
 
 
-
-
         public double Offset
         {
             get { return (double)GetValue(OffsetProperty); }

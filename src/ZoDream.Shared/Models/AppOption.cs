@@ -9,9 +9,11 @@ namespace ZoDream.Shared.Models
     {
         public bool InfoVisible { get; set; }
 
+        public bool TitleRoll { get; set; } = true;
+
         public LoopMode Mode { get; set; } = LoopMode.None;
 
-        public int Volume { get; set; } = 127;
+        public int Volume { get; set; } = 100;
 
         public bool SpectrumVisible { get; set; } = true;
 

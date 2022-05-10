@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ZoDream.Player.Pages;
 using ZoDream.Player.ViewModels;
+using ZoDream.Shared.Controls;
 using ZoDream.Shared.Models;
 using ZoDream.Shared.Readers;
 using ZoDream.Shared.Utils;
@@ -135,12 +136,20 @@ namespace ZoDream.Player
 
         private async void LoadOption()
         {
+            await ViewModel.Player.ReadyAsync();
             var option = await ViewModel.LoadOptionAsync();
             InfoPanel.Visibility = Utils.Util.ToVisible(option.InfoVisible);
+            NameTb.IsActive = option.TitleRoll;
             SpectPanel.Kind = option.SpectrumType;
             SpectPanel.Foreground = Utils.Util.ToBrush(option.SpectrumColor);
             SpectPanel.Visibility = Utils.Util.ToVisible(option.SpectrumVisible);
             LyricsPanel.Visibility = Utils.Util.ToVisible(option.LyricsVisible);
+            LyricsPanel.FontFamily = Utils.Util.ToFont(option.LyricsFontFamily);
+            LyricsPanel.FontSize = option.LyricsFontSize;
+            LyricsPanel.ActiveFontSize = option.LyricsActiveFontSize;
+            LyricsPanel.FromColor = ColorHelper.From(option.LyricsFromColor);
+            LyricsPanel.ToColor = ColorHelper.From(option.LyricsToColor);
+            ViewModel.Player.Volume = option.Volume;
             ViewModel.Player.LoopMode = option.Mode;
 
         }
@@ -246,32 +255,53 @@ namespace ZoDream.Player
 
         private void ShowSetting()
         {
-            var model = new SettingViewModel(ViewModel.Option);
-            var page = new SettingWindow(model);
+            var option = new SettingViewModel(ViewModel.Option);
+            var page = new SettingWindow(option);
             page.Show();
-            model.PropertyChanged += (_, e) =>
+            option.PropertyChanged += (_, e) =>
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(model.SpectrumType):
-                        SpectPanel.Kind = model.SpectrumType;
+                    case nameof(option.SpectrumType):
+                        SpectPanel.Kind = option.SpectrumType;
                         break;
-                    case nameof(model.SpectrumColor):
-                        SpectPanel.Foreground = Utils.Util.ToBrush(model.SpectrumColor);
+                    case nameof(option.SpectrumColor):
+                        SpectPanel.Foreground = Utils.Util.ToBrush(option.SpectrumColor);
                         break;
-                    case nameof(model.Mode):
-                        ViewModel.Player.LoopMode = model.Mode;
+                    case nameof(option.Mode):
+                        ViewModel.Player.LoopMode = option.Mode;
                         break;
-                    case nameof(model.SpectrumVisible):
-                        SpectPanel.Visibility = Utils.Util.ToVisible(model.SpectrumVisible);
+                    case nameof(option.Volume):
+                        ViewModel.Player.Volume = option.Volume;
                         break;
-                    case nameof(model.LyricsVisible):
-                        LyricsPanel.Visibility = Utils.Util.ToVisible(model.LyricsVisible);
+                    case nameof(option.SpectrumVisible):
+                        SpectPanel.Visibility = Utils.Util.ToVisible(option.SpectrumVisible);
+                        break;
+                    case nameof(option.LyricsVisible):
+                        LyricsPanel.Visibility = Utils.Util.ToVisible(option.LyricsVisible);
+                        break;
+                    case nameof(option.LyricsFontFamily):
+                        LyricsPanel.FontFamily = Utils.Util.ToFont(option.LyricsFontFamily);
+                        break;
+                    case nameof(option.LyricsFontSize):
+                        LyricsPanel.FontSize = option.LyricsFontSize;
+                        break;
+                    case nameof(option.LyricsActiveFontSize):
+                        LyricsPanel.ActiveFontSize = option.LyricsActiveFontSize;
+                        break;
+                    case nameof(option.LyricsFromColor):
+                        LyricsPanel.FromColor = ColorHelper.From(option.LyricsFromColor);
+                        break;
+                    case nameof(option.LyricsToColor):
+                        LyricsPanel.ToColor = ColorHelper.From(option.LyricsToColor);
+                        break;
+                    case nameof(option.TitleRoll):
+                        NameTb.IsActive = option.TitleRoll;
                         break;
                     default:
                         break;
                 }
-                ViewModel.Option = model.ToOption();
+                ViewModel.Option = option.ToOption();
                 _ = ViewModel.SaveOptionAsync();
             };
         }

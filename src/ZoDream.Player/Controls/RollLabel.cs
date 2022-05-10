@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -125,14 +126,25 @@ namespace ZoDream.Player.Controls
                 return;
             }
             var visibleWidth = ActualWidth - Padding.Left - Padding.Right;
-            var fontHideWidth = ContentWidth - visibleWidth;
+            var fontHideWidth = Math.Max(ContentWidth - visibleWidth, 0);
             if (RollProgress >= fontHideWidth + StopTime)
             {
                 RollProgress = -StopTime;
             }
+            var x = GetLeft() - Math.Min(Math.Max(RollProgress, 0), fontHideWidth);
             drawingContext.DrawText(Formatted, new Point(
-                - Math.Min(Math.Max(RollProgress, 0), fontHideWidth) + Padding.Left
+                 x
                 , Padding.Top));
+        }
+
+        public double GetLeft()
+        {
+            return HorizontalContentAlignment switch
+            {
+                HorizontalAlignment.Center => Math.Max((ActualWidth - ContentWidth) / 2, Padding.Top),
+                HorizontalAlignment.Right => Math.Max(ActualWidth - ContentWidth - Padding.Right, Padding.Top),
+                _ => Padding.Left,
+            };
         }
 
 

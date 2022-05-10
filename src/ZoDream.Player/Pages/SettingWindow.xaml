@@ -46,11 +46,13 @@
                         <StackPanel>
                             <TextBlock Text="显示歌曲信息" Style="{StaticResource HeaderTb}"/>
                             <ctl:SwitchInput Value="{Binding InfoVisible, Mode=TwoWay}"/>
+                            <TextBlock Text="标题超出滚动" Style="{StaticResource HeaderTb}"/>
+                            <ctl:SwitchInput Value="{Binding TitleRoll, Mode=TwoWay}"/>
                             <TextBlock Text="播放模式" Style="{StaticResource HeaderTb}"/>
                             <ComboBox ItemsSource="{Binding ModeItems}" 
                                       SelectedValue="{Binding Mode, Mode=TwoWay}"/>
                             <TextBlock Text="音量大小" Style="{StaticResource HeaderTb}"/>
-                            <ctl:ProgressBar Max="127" Value="{Binding Volume, Mode=TwoWay}"/>
+                            <ctl:ProgressBar Max="100" Value="{Binding Volume, Mode=TwoWay}"/>
                             <TextBlock Text="显示频谱" Style="{StaticResource HeaderTb}"/>
                             <ctl:SwitchInput Value="{Binding SpectrumVisible, Mode=TwoWay}"/>
                             <TextBlock Text="频谱样式" Style="{StaticResource HeaderTb}"/>

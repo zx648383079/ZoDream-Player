@@ -72,6 +72,29 @@ namespace ZoDream.Player.Controls
                     (d as LyricsPanelItem)?.UpdateSource();
                 }));
 
+        public Color FromColor
+        {
+            get { return (Color)GetValue(FromColorProperty); }
+            set { SetValue(FromColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FromColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FromColorProperty =
+            DependencyProperty.Register("FromColor", typeof(Color), typeof(LyricsPanelItem), new PropertyMetadata(Colors.Black));
+
+
+
+        public Color ToColor
+        {
+            get { return (Color)GetValue(ToColorProperty); }
+            set { SetValue(ToColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ToColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ToColorProperty =
+            DependencyProperty.Register("ToColor", typeof(Color), typeof(LyricsPanelItem), new PropertyMetadata(Colors.Red));
+
+
         public double Offset
         {
             get { return (double)GetValue(OffsetProperty); }

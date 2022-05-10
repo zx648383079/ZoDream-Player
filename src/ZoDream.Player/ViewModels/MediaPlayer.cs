@@ -44,6 +44,10 @@ namespace ZoDream.Player.ViewModels
             } 
             set
             {
+                if (!IsReady)
+                {
+                    return;
+                }
                 Bass.Volume = value <= 0 ? 0 : (value / 100);
             } 
         }

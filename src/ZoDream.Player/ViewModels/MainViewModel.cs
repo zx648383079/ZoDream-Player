@@ -18,8 +18,9 @@ namespace ZoDream.Player.ViewModels
         public MainViewModel()
         {
             Player = new MediaPlayer(this);
-            _ = Player.ReadyAsync();
         }
+
+
 
         public readonly MediaPlayer Player;
 
