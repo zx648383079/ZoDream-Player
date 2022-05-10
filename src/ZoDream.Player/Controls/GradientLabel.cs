@@ -109,25 +109,23 @@ namespace ZoDream.Player.Controls
 
         private void UpdateOffset(double oldVal, double newVal)
         {
-            UpdateText();
-            InvalidateVisual();
-            //if (oldVal <= 0 || string.IsNullOrWhiteSpace(Text))
-            //{
-            //    InvalidateVisual();
-            //    return;
-            //}
-            //var oldOffset = oldVal * Text.Length;
-            //var newOffset = newVal * Text.Length;
-            //if (Math.Abs(oldOffset - newOffset) >= 0.1)
-            //{
-            //    InvalidateVisual();
-            //    return;
-            //}
-            //if (Convert.ToInt32(oldOffset) != Convert.ToInt32(newOffset))
-            //{
-            //    InvalidateVisual();
-            //    return;
-            //}
+            //UpdateText();
+            //InvalidateVisual();
+            if (string.IsNullOrWhiteSpace(Text))
+            {
+                UpdateText();
+                InvalidateVisual();
+                return;
+            }
+            if (oldVal != newVal)
+            {
+                if (oldVal <= 0 || newVal <= 0)
+                {
+                    UpdateText();
+                }
+                InvalidateVisual();
+                return;
+            }
         }
 
         private void UpdateText()
