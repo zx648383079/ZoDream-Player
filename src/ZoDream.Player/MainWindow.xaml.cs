@@ -149,9 +149,8 @@ namespace ZoDream.Player
             LyricsPanel.ActiveFontSize = option.LyricsActiveFontSize;
             LyricsPanel.FromColor = ColorHelper.From(option.LyricsFromColor);
             LyricsPanel.ToColor = ColorHelper.From(option.LyricsToColor);
-            ViewModel.Player.Volume = option.Volume;
             ViewModel.Player.LoopMode = option.Mode;
-
+            option.Volume = Convert.ToInt32(ViewModel.Player.Volume); // 不自动设置音量，跟着系统音量走
         }
 
         private void Player_OnStop(object sender)
@@ -255,6 +254,7 @@ namespace ZoDream.Player
 
         private void ShowSetting()
         {
+            ViewModel.Option.Volume = Convert.ToInt32(ViewModel.Player.Volume);
             var option = new SettingViewModel(ViewModel.Option);
             var page = new SettingWindow(option);
             page.Show();
