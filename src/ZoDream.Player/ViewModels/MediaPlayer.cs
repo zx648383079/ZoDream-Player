@@ -281,8 +281,7 @@ namespace ZoDream.Player.ViewModels
                     {
                         return;
                     }
-                    var rnd = new Random();
-                    await PlayAsync(rnd.Next(Count));
+                    await PlayAsync(GetRandom(Count, Current));
                     break;
                 case LoopMode.SingleLoop:
                     await PlayAsync(Current);
@@ -292,6 +291,13 @@ namespace ZoDream.Player.ViewModels
                 default:
                     break;
             }
+        }
+
+        private static int GetRandom(int count, int extra)
+        {
+            var rnd = new Random();
+            var res = rnd.Next(count - 1);
+            return res >= extra ? res + 1 : res;
         }
 
         public async Task ReadyAsync()
