@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ZoDream.Player.Controls
 {
@@ -87,23 +88,26 @@ namespace ZoDream.Player.Controls
             DependencyProperty.Register("IsActive", typeof(bool), typeof(RollLabel), new PropertyMetadata(true));
 
 
+        private DispatcherTimer Timer = new();
         private FormattedText? Formatted;
         private double ContentWidth;
         private double RollProgress = 0;
-        private readonly double Speed = .5;  // 滚动速度
+        private readonly double Speed = 2;  // 滚动速度
         private readonly double StopTime = 50.0;//Speed * 100; // 停留时间根据滚动速度算出来的
 
         private void RollLabel_Unloaded(object sender, RoutedEventArgs e)
         {
-            CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            Timer.Stop();
         }
 
         private void RollLabel_Loaded(object sender, RoutedEventArgs e)
         {
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
+            Timer.Interval = TimeSpan.FromMilliseconds(100);
+            Timer.Tick += Timer_Tick;
+            Timer.Start();
         }
 
-        private void CompositionTarget_Rendering(object? sender, EventArgs e)
+        private void Timer_Tick(object? sender, EventArgs e)
         {
             if (!IsActive || IsMouseOver || Formatted == null)
             {

@@ -214,12 +214,12 @@ namespace ZoDream.Player
                 DurationTb.Text = Time.MinuteFormat(item.Duration, false);
                 ViewModel.IsPaused = false;
             });
-            _ = LoadLyricsAsync(item.Lyrics, item.Duration);
+            _ = LoadLyricsAsync(item, item.Duration);
         }
 
-        private async Task LoadLyricsAsync(string file, double duration)
+        private async Task LoadLyricsAsync(FileItem item, double duration)
         {
-            var lyrics = await ViewModel.LoadLyricsAsync(file, duration);
+            var lyrics = await ViewModel.LoadLyricsAsync(item, duration);
             App.Current.Dispatcher.Invoke(() =>
             {
                 LyricsPanel.Items = lyrics == null ? null : lyrics.Items;
@@ -297,6 +297,9 @@ namespace ZoDream.Player
                         break;
                     case nameof(option.TitleRoll):
                         NameTb.IsActive = option.TitleRoll;
+                        break;
+                    case nameof(option.InfoVisible):
+                        InfoPanel.Visibility = Utils.Util.ToVisible(option.InfoVisible);
                         break;
                     default:
                         break;

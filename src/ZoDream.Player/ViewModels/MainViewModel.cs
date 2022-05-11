@@ -91,15 +91,9 @@ namespace ZoDream.Player.ViewModels
             }
         }
 
-        public async Task<Lyrics?> LoadLyricsAsync(string file, double duration)
+        public async Task<Lyrics?> LoadLyricsAsync(FileItem item, double duration)
         {
-            if (string.IsNullOrWhiteSpace(file))
-            {
-                Lyrics = null;
-                return Lyrics;
-            }
-            var reader = new LrcReader();
-            Lyrics = await reader.ReadAsync(file);
+            Lyrics = await item.LoadLyricsAsync();
             Lyrics?.ApplyDuration((int)duration);
             return Lyrics;
         }

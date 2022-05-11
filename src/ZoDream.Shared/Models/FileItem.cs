@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
+using ZoDream.Shared.Readers;
 using ZoDream.Shared.ViewModels;
 
 namespace ZoDream.Shared.Models
@@ -40,6 +42,55 @@ namespace ZoDream.Shared.Models
             set => Set(ref isPaused, value);
         }
 
+        /// <summary>
+        /// 获取歌词
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Lyrics?> LoadLyricsAsync()
+        {
+            var fileName = GetLyricsFile();
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return null;
+            }
+            if (!File.Exists(fileName))
+            {
+                Lyrics = string.Empty;
+                return null;
+            }
+            var ext = Path.GetExtension(fileName);
+            var reader = ext switch
+            {
+                ".krc" => new KrcReader(),
+                ".qrc" => new QrcReader(),
+                _ => new LrcReader(),
+            };
+            return await reader.ReadAsync(fileName);
+        }
+        /// <summary>
+        /// 获取歌词文件
+        /// </summary>
+        /// <returns></returns>
+        private string GetLyricsFile()
+        {
+            if (!string.IsNullOrEmpty(Lyrics))
+            {
+                return Lyrics;
+            }
+            var baseFile = FileName.Replace(Path.GetExtension(FileName), "");
+            var lyricsExt = new string[] { ".lrc", ".krc", ".qrc" };
+            foreach (var item in lyricsExt)
+            {
+                var lyricsFile = baseFile + item;
+                if (File.Exists(lyricsFile))
+                {
+                    Lyrics = lyricsFile;
+                    break;
+                }
+            }
+            return Lyrics;
+        }
+
         public FileItem()
         {
 
@@ -55,17 +106,7 @@ namespace ZoDream.Shared.Models
                 Name = temp[0];
                 Author = temp[1];
             }
-            var baseFile = file.Replace(Path.GetExtension(file), "");
-            var lyricsExt = new string[] { ".lrc", ".krc" };
-            foreach (var item in lyricsExt)
-            {
-                var lyricsFile = baseFile + item;
-                if (File.Exists(lyricsFile))
-                {
-                    Lyrics = lyricsFile;
-                    break;
-                }
-            }
+            GetLyricsFile();
         }
     }
 }
