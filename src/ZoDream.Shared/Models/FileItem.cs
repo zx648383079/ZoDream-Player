@@ -49,23 +49,7 @@ namespace ZoDream.Shared.Models
         public async Task<Lyrics?> LoadLyricsAsync()
         {
             var fileName = GetLyricsFile();
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                return null;
-            }
-            if (!File.Exists(fileName))
-            {
-                Lyrics = string.Empty;
-                return null;
-            }
-            var ext = Path.GetExtension(fileName);
-            var reader = ext switch
-            {
-                ".krc" => new KrcReader(),
-                ".qrc" => new QrcReader(),
-                _ => new LrcReader(),
-            };
-            return await reader.ReadAsync(fileName);
+            return await LyricsProvider.ReadAsync(fileName);
         }
         /// <summary>
         /// 获取歌词文件

@@ -12,5 +12,9 @@ namespace ZoDream.Shared.Models
         Ring,
         SymmetryRing,
         RingLine,
+        Polyline,
+        InversePolyline,
+        PolylineRing,
+        InversePolylineRing,
     }
 }

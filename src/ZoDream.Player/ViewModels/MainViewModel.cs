@@ -45,18 +45,33 @@ namespace ZoDream.Player.ViewModels
         }
 
 
-        public void AddFile(string file)
+        public FileItem? AddFile(string file)
         {
-            Player.Add(new FileItem(file));
+            if (string.IsNullOrWhiteSpace(file) || !File.Exists(file))
+            {
+                return null;
+            }
+            var item = new FileItem(file);
+            Player.Add(item);
+            return item;
         }
 
-        public Task AddFilesAsync(IEnumerable<string> files)
+        public Task AddFilesAsync(IEnumerable<string> files, bool playFirst = false)
         {
             return Task.Factory.StartNew(() =>
             {
+                FileItem? first = null;
                 foreach (var item in files)
                 {
-                    AddFile(item);
+                    var i = AddFile(item);
+                    if (i != null && first == null)
+                    {
+                        first = i;
+                    }
+                }
+                if (playFirst && first != null)
+                {
+                    _ = Player.PlayAsync(first);
                 }
             });
         }

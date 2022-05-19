@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using ZoDream.Player.Plugin;
 using ZoDream.Shared.Models;
 using ZoDream.Shared.Players;
 using ZoDream.Shared.ViewModels;
@@ -37,6 +39,16 @@ namespace ZoDream.Player.ViewModels
             DesktopLyricsTop = Source.DesktopLyricsTop;
             DesktopLyricsVisible = Source.DesktopLyricsVisible;
             DesktopLyricsFontSize = Source.DesktopLyricsFontSize;
+            PluginItems = Source.PluginItems;
+            var plugins = PluginLoader.Load();
+            foreach (var item in plugins)
+            {
+                if (PluginItems.Contains(item.FileName))
+                {
+                    item.IsActive = true;
+                }
+                PluginFileItems.Add(item);
+            }
         }
 
         private readonly AppOption Source;
@@ -213,6 +225,22 @@ namespace ZoDream.Player.ViewModels
             set => Set(ref lyricsFontFamily, value);
         }
 
+        private ObservableCollection<PluginItem> pluginFileItems = new();
+
+        public ObservableCollection<PluginItem> PluginFileItems
+        {
+            get => pluginFileItems;
+            set => Set(ref pluginFileItems, value);
+        }
+
+        private List<string> pluginItems;
+
+        public List<string> PluginItems
+        {
+            get => pluginItems;
+            set => Set(ref pluginItems, value);
+        }
+
 
 
         public AppOption ToOption()
@@ -235,7 +263,43 @@ namespace ZoDream.Player.ViewModels
             Source.DesktopLyricsTop = DesktopLyricsTop;
             Source.DesktopLyricsVisible = DesktopLyricsVisible;
             Source.DesktopLyricsFontSize = DesktopLyricsFontSize;
+            Source.PluginItems = PluginItems;
             return Source;
+        }
+
+        public void PluginExport(string[] fileNames)
+        {
+            var items = PluginLoader.Save(fileNames);
+            foreach (var item in items)
+            {
+                PluginFileItems.Add(item);
+            }
+        }
+
+        public void PluginUnInstall(PluginItem? pluginItem)
+        {
+            foreach (var item in PluginFileItems)
+            {
+                if (item == pluginItem)
+                {
+                    item.IsActive = false;
+                    PluginItems.Remove(item.FileName);
+                    OnPropertyChanged(nameof(PluginItems));
+                }
+            }
+        }
+
+        public void PluginInstall(PluginItem? pluginItem)
+        {
+            foreach (var item in PluginFileItems)
+            {
+                if (item == pluginItem)
+                {
+                    item.IsActive = true;
+                    PluginItems.Add(item.FileName);
+                    OnPropertyChanged(nameof(PluginItems));
+                }
+            }
         }
     }
 }

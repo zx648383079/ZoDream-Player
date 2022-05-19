@@ -92,7 +92,7 @@ namespace ZoDream.Player.Controls
         public static readonly DependencyProperty KindProperty =
             DependencyProperty.Register("Kind", typeof(SpectrumType), typeof(SpectrumPanel), new PropertyMetadata(SpectrumType.Columnar));
 
-        private List<HatItem> HatItems = new();
+        private readonly List<HatItem> HatItems = new();
         private readonly double Space = 1.0;
         private readonly double ColumnWidth = 4.0;
         private readonly double HatSpeed = 2.0;
@@ -122,10 +122,22 @@ namespace ZoDream.Player.Controls
                     RenderRing(drawingContext);
                     break;
                 case SpectrumType.RingLine:
-                    RenderRingLine(drawingContext);
+                    RenderRingLine(drawingContext, true);
                     break;
                 case SpectrumType.SymmetryRing:
                     RenderSymmetryRing(drawingContext);
+                    break;
+                case SpectrumType.Polyline:
+                    RenderPolyline(drawingContext);
+                    break;
+                case SpectrumType.PolylineRing:
+                    RenderPolylineRing(drawingContext);
+                    break;
+                case SpectrumType.InversePolyline:
+                    RenderInversePolyline(drawingContext);
+                    break;
+                case SpectrumType.InversePolylineRing:
+                    RenderInversePolylineRing(drawingContext);
                     break;
                 default:
                     break;
@@ -133,8 +145,8 @@ namespace ZoDream.Player.Controls
         }
 
         private void RenderEach(DrawingContext drawingContext, 
-            int dataBegin, int count, double rate, double maxHeight, 
-            Action<DrawingContext, Pen, int, double, double, double> func)
+            int dataBegin, int count, double rate, double maxHeight,
+            RenderSpectumFunc func)
         {
             var pen = new Pen(BorderBrush, 0);
             var outerWidth = ColumnWidth + Space;
@@ -144,6 +156,7 @@ namespace ZoDream.Player.Controls
             for (int i = 0; i < count; i++)
             {
                 func?.Invoke(drawingContext, pen, i, outerWidth * i, y,
+                    ColumnWidth,
                     dataIndex >= 0 && dataIndex < Items.Length ?
                     Math.Min(Items[dataIndex] * preRectHeight * rate, maxHeight) : 0);
                 dataIndex++;
@@ -152,10 +165,88 @@ namespace ZoDream.Player.Controls
 
         private void RenderColumnar(DrawingContext drawingContext)
         {
+            RenderEach(drawingContext, RenderColumnarHat);
+        }
+
+        private void RenderPolyline(DrawingContext drawingContext)
+        {
+            var lastPoint = new Point(0, ActualHeight);
+            var pen = new Pen(Foreground, 1);
+            RenderEach(drawingContext, (d, _, x, y, w, h, _) =>
+            {
+                var point = new Point(x + w / 2, y - h);
+                d.DrawLine(pen, lastPoint, point);
+                lastPoint = point;
+            });
+            if (lastPoint.X == 0 || pen == null)
+            {
+                return;
+            }
+            drawingContext.DrawLine(pen, lastPoint, 
+                new Point(lastPoint.X + ColumnWidth / 2, ActualHeight));
+        }
+
+        private void RenderEach(DrawingContext drawingContext,
+            RenderSpectumHatFunc func)
+        {
+            RenderEach(drawingContext, false, func);
+        }
+
+        private void RenderEach(DrawingContext drawingContext,
+            bool isSymmetry,
+            RenderSpectumHatFunc func)
+        {
             var outerWidth = ColumnWidth + Space;
+            var maxWidth = isSymmetry ? ActualWidth / 2 : ActualWidth;
+            var leftX = isSymmetry ? maxWidth - Space / 2 : 0;
+            var rightX = isSymmetry ? maxWidth + Space / 2 : 0;
             RenderEach(drawingContext, 0,
-                (int)Math.Floor(ActualWidth / outerWidth), 
-                Rate * 3, ActualHeight, RenderColumnar);
+                (int)Math.Floor(maxWidth / outerWidth),
+                Rate * 2, ActualHeight, (d,p,i,x,y,w,h) =>
+                {
+                    var hat = GetHat(i, h);
+                    func?.Invoke(d, p, x + rightX, y, w, h, hat);
+                    if (isSymmetry)
+                    {
+                        func?.Invoke(d, p, leftX - x, y, w, h, hat);
+                    }
+                });
+        }
+
+        private void RenderInversePolyline(DrawingContext drawingContext)
+        {
+            var outerWidth = ColumnWidth + Space;
+            var centerX = ActualWidth / 2;
+            var leftX = centerX - Space / 2;
+            var rightX = centerX + Space / 2;
+            var lastX = -Space/2;
+            var lastY = ActualHeight;
+            var pen = new Pen(Foreground, 1);
+            var j = -1;
+            RenderEach(drawingContext, 0,
+                (int)Math.Floor(centerX / outerWidth),
+                Rate, ActualHeight, (d, _, i, x, y, w, h) =>
+                {
+                    j++;
+                    var top = y - h;
+                    if (j < 1)
+                    {
+                        lastY = Math.Min(top + 3, lastY);
+                    }
+                    d.DrawLine(pen, 
+                        new Point(lastX + rightX, lastY), 
+                        new Point(x + rightX, top));
+                    d.DrawLine(pen,
+                        new Point(leftX - lastX, lastY),
+                        new Point(leftX - x, top));
+                    lastX = x;
+                    lastY = top;
+                });
+        }
+
+        private void RenderInverseColumnar(DrawingContext drawingContext)
+        {
+            RenderEach(drawingContext, true, RenderColumnarHat);
         }
 
         private void RenderColumnar(DrawingContext drawingContext, Pen pen, int index,
@@ -170,8 +261,8 @@ namespace ZoDream.Player.Controls
             RenderColumnar(drawingContext, pen, x, y, height, hasHat ? GetHat(index, height) : null);
         }
 
-        private void RenderColumnar(DrawingContext drawingContext, Pen pen,
-            double x, double y, double height, HatItem? hat)
+        private void RenderColumnarHat(DrawingContext drawingContext, Pen pen,
+            double x, double y, double width, double height, HatItem? hat)
         {
             var rectHeight = RectHeight > 0 ? RectHeight : height;
             if (height > 0)
@@ -182,7 +273,7 @@ namespace ZoDream.Player.Controls
                     var h = Math.Min(rectHeight, height - bottom);
                     drawingContext.DrawRectangle(Foreground, pen
                     , new Rect(
-                        x, y - bottom - h, ColumnWidth, h
+                        x, y - bottom - h, width, h
                         ));
                     bottom += rectHeight + Space;
                 }
@@ -191,7 +282,7 @@ namespace ZoDream.Player.Controls
             {
                 drawingContext.DrawRectangle(Foreground, pen
                     , new Rect(
-                        x, y - 2, ColumnWidth, 2
+                        x, y - 2, width, 2
                         ));
             }
             if (hat is null)
@@ -206,8 +297,14 @@ namespace ZoDream.Player.Controls
             }
             drawingContext.DrawRectangle(Foreground,
                 pen, new Rect(
-                    x, hatY, ColumnWidth, hatHeight
+                    x, hatY, width, hatHeight
                     ));
+        }
+
+        private void RenderColumnar(DrawingContext drawingContext, Pen pen,
+            double x, double y, double height, HatItem? hat)
+        {
+            RenderColumnarHat(drawingContext, pen, x, y, ColumnWidth, height, hat);
         }
 
 
@@ -249,55 +346,45 @@ namespace ZoDream.Player.Controls
 
         private void RenderRing(DrawingContext drawingContext)
         {
-            RenderRing(drawingContext, .6, 360.0, 1, (d, p, i, x, y, h, a, cx, cy) =>
-            {
-                var tranform = new RotateTransform(a, cx, cy);
-                drawingContext.PushTransform(tranform);
-                RenderColumnar(d, p, i, x, y, h);
-                drawingContext.Pop();
-            });
+            RenderColumnarRingEach(drawingContext, false, RenderColumnarHat);
+        }
+
+        private void RenderRing(DrawingContext drawingContext, double radiusRate,
+            double maxAngle, double perimeterRate,
+            RenderSpectumRingFunc func)
+        {
+            RenderRing(drawingContext, radiusRate, maxAngle, perimeterRate, true, func);
         }
 
         private void RenderRing(DrawingContext drawingContext, double radiusRate, 
-            double maxAngle, double perimeterRate, 
-            Action<DrawingContext, Pen, int, double, double, double, double, double, double> func)
+            double maxAngle, double perimeterRate, bool hasCircle, 
+            RenderSpectumRingFunc func)
         {
             var outerWidth = ColumnWidth + Space;
             var centerX = ActualWidth / 2;
             var centerY = ActualHeight / 2;
             var radius = Math.Min(centerX, centerY) * radiusRate;
-            var columnCount = (int)Math.Min(Math.Max(Items.Length, 10), Math.Floor(Math.PI * radius * 2 * perimeterRate / outerWidth));
+            var columnCount = (int)Math.Min(Math.Max(Items.Length, 10), 
+                Math.Floor(Math.PI * radius * 2 * perimeterRate / outerWidth));
             var preAngle = maxAngle / columnCount;
             if (Items.Length < 1)
             {
                 return;
             }
-            drawingContext.DrawEllipse(new SolidColorBrush(Colors.Transparent),
-                new Pen(Foreground, 1), new Point(centerX, centerY), radius, radius);
-
+            if (hasCircle)
+            {
+                drawingContext.DrawEllipse(new SolidColorBrush(Colors.Transparent),
+                                new Pen(Foreground, 1), new Point(centerX, centerY), radius, radius);
+            }
             var y = centerY - radius;
             var x = centerX - ColumnWidth / 2;
-            RenderEach(drawingContext, 0, columnCount, Rate, y, (d, p, i, _, _, h) =>
+            RenderEach(drawingContext, 0, columnCount, Rate, y, (d, p, i, _, _, _, h) =>
             {
-                func?.Invoke(d, p, i, x, y, h, i * preAngle, centerX, centerY);
+                func?.Invoke(d, p, i, x, y, ColumnWidth, h, i * preAngle, centerX, centerY, radius);
             });
         }
 
 
-        private void RenderInverseColumnar(DrawingContext drawingContext)
-        {
-            var outerWidth = ColumnWidth + Space;
-            var centerX = ActualWidth / 2;
-            var leftX = centerX - Space / 2;
-            var rightX = centerX + Space / 2;
-            RenderEach(drawingContext, 0,
-                (int)Math.Floor(centerX / outerWidth),
-                Rate, ActualHeight, (d, p, i, x, y, h) =>
-                {
-                    RenderColumnar(d, p, i, x + rightX, y, h);
-                    RenderColumnar(d, p, leftX - x, y, h, HatItems[i]);
-                });
-        }
 
         private void RenderSymmetryColumnar(DrawingContext drawingContext)
         {
@@ -308,7 +395,7 @@ namespace ZoDream.Player.Controls
         }
 
         private void RenderSymmetryColumnar(DrawingContext drawingContext, Pen pen, int index,
-            double x, double y, double height)
+            double x, double y, double width, double height)
         {
             if (height < 2)
             {
@@ -316,58 +403,136 @@ namespace ZoDream.Player.Controls
             }
             drawingContext.DrawRectangle(Foreground, pen
                 , new Rect(
-                    x, y - height, ColumnWidth, 2 * height
+                    x, y - height, width, 2 * height
                     ));
         }
 
-        private void RenderRingLine(DrawingContext drawingContext)
+        private void RenderColumnarRingEach(DrawingContext drawingContext, bool isSymmetry,
+            RenderSpectumHatFunc func)
         {
-            var outerWidth = ColumnWidth + Space;
-            var centerX = ActualWidth / 2;
-            var centerY = ActualHeight / 2;
-            var radius = Math.Min(centerX, centerY) * .6;
-            var columnCount = (int)Math.Min(Math.Max(Items.Length, 10), 
-                Math.Floor(Math.PI * radius / outerWidth));
-            var preAngle = 180 / columnCount;
-            if (Items.Length < 1)
+            RenderRing(drawingContext, .6, isSymmetry ? 180.0 : 360.0, isSymmetry ? .5 : 1, 
+                (d, p, i, x, y, w, h, a, cx, cy, _) =>
             {
-                return;
-            }
-            var pen = new Pen(Foreground, 1);
-            //drawingContext.DrawEllipse(new SolidColorBrush(Colors.Transparent), pen
-            //    , new Point(centerX, centerY), radius, radius);
-            RenderEach(drawingContext, 0, columnCount, Rate, centerY - radius, (d, _, i, _, _, h) =>
+                var hat = GetHat(i, h);
+                var tranform = new RotateTransform(a, cx, cy);
+                drawingContext.PushTransform(tranform);
+                func?.Invoke(d, p, x, y, w, h, hat);
+                drawingContext.Pop();
+                if (isSymmetry)
+                {
+                    tranform = new RotateTransform(-a, cx, cy);
+                    drawingContext.PushTransform(tranform);
+                    func?.Invoke(d, p, x, y, w, h, hat);
+                    drawingContext.Pop();
+                }
+            });
+        }
+
+        private void RenderRingEach(DrawingContext drawingContext, bool isSymmetry,
+            RenderSpectumRingPointFunc func)
+        {
+            RenderRing(drawingContext, .6, isSymmetry ? 180.0 : 360.0, 
+                isSymmetry ? .5 : 1, false, (d, p, i, _, _, w, h, a, cx, cy, radius) =>
             {
                 var len = radius + h;
-                var angle = ToDeg(i * preAngle);
-                var x = centerX + Math.Sin(angle) * len;
-                var y = centerY - Math.Cos(angle) * len;
+                var angle = ToDeg(a);
+                var x = cx + Math.Sin(angle) * len;
+                var y = cy - Math.Cos(angle) * len;
+                func?.Invoke(d, p, x, y);
 
-                len = radius - h;
-                var x2 = centerX + Math.Sin(angle) * len;
-                var y2 = centerY - Math.Cos(angle) * len;
-                if (x2 == x && y2 == y)
+                if (isSymmetry)
                 {
-                    return;
+                    func?.Invoke(d, p, cx * 2 - x , y);
                 }
-                d.DrawLine(pen, new Point(x, y), new Point(x2, y2));
-                d.DrawLine(pen, new Point(centerX * 2 - x, y), new Point(centerX * 2 - x2, y2));
             });
+        }
+
+        private void RenderRingLine(DrawingContext drawingContext, bool isSymmetry)
+        {
+            var pen = new Pen(Foreground, 1);
+            RenderRing(drawingContext, .6, isSymmetry ? 180.0 : 360.0,
+                isSymmetry ? .5 : 1, false, (d, _, i, _, _, w, h, a, cx, cy, radius) =>
+                {
+                    var len = radius + h;
+                    var angle = ToDeg(a);
+                    var x = cx + Math.Sin(angle) * len;
+                    var y = cy - Math.Cos(angle) * len;
+                    len = radius - h;
+                    var x2 = cx + Math.Sin(angle) * len;
+                    var y2 = cy - Math.Cos(angle) * len;
+                    if (x2 == x && y2 == y)
+                    {
+                        return;
+                    }
+                    d.DrawLine(pen, new Point(x, y), new Point(x2, y2));
+                    if (isSymmetry)
+                    {
+                        d.DrawLine(pen, new Point(cx * 2 - x, y), new Point(cx * 2 - x2, y2));
+                    }
+                });
         }
 
         private void RenderSymmetryRing(DrawingContext drawingContext)
         {
-            RenderRing(drawingContext, .6, 180.0, .5, (d, p, i, x, y, h, a, cx, cy) =>
+            RenderColumnarRingEach(drawingContext, true, RenderColumnarHat);
+        }
+
+        private void RenderPolylineRing(DrawingContext drawingContext)
+        {
+            var i = -1;
+            var first = new Point();
+            var last = new Point();
+            var pen = new Pen(Foreground, 1);
+            RenderRingEach(drawingContext, false, (d, _, x, y) =>
             {
-                var tranform = new RotateTransform(a, cx, cy);
-                drawingContext.PushTransform(tranform);
-                RenderColumnar(d, p, i, x, y, h);
-                drawingContext.Pop();
-                tranform = new RotateTransform(-a, cx, cy);
-                drawingContext.PushTransform(tranform);
-                RenderColumnar(d, p, x, y, h, HatItems[i]);
-                drawingContext.Pop();
+                i++;
+                var point = new Point(x, y);
+                if (i < 1)
+                {
+                    last = first = point;
+                    return;
+                }
+                d.DrawLine(pen, last, point);
+                last = point;
             });
+            if (pen == null)
+            {
+                return;
+            }
+            drawingContext.DrawLine(pen, last, first);
+        }
+
+        private void RenderInversePolylineRing(DrawingContext drawingContext)
+        {
+            var i = -1;
+            var last1 = new Point();
+            var last2 = new Point();
+            var pen = new Pen(Foreground, 1);
+            RenderRingEach(drawingContext, true, (d, _, x, y) =>
+            {
+                i++;
+                var point = new Point(x, y);
+                if (i == 0)
+                {
+                    last1 = point;
+                    return;
+                }
+                if (i == 1)
+                {
+                    last2 = point;
+                    d.DrawLine(pen, last1, point);
+                    return;
+                }
+                if (i % 2 == 0)
+                {
+                    d.DrawLine(pen, last1, point);
+                    last1 = point;
+                    return;
+                }
+                d.DrawLine(pen, last2, point);
+                last2 = point;
+            });
+            drawingContext.DrawLine(pen, last1, last2);
         }
 
         private static double ToDeg(double a)
@@ -375,4 +540,10 @@ namespace ZoDream.Player.Controls
             return a * Math.PI / 180;
         }
     }
+
+    internal delegate void RenderSpectumHatFunc(DrawingContext context, Pen pen, double x, double y, double width, double height, HatItem? hat);
+    internal delegate void RenderSpectumFunc(DrawingContext context, Pen pen, int dataIndex, double x, double y, double width, double height);
+    internal delegate void RenderSpectumRingPointFunc(DrawingContext context, Pen pen, double x, double y);
+    internal delegate void RenderSpectumRingFunc(DrawingContext context, Pen pen, int dataIndex, double x, double y, double width, double height, 
+        double angle, double centerX, double centerY, double radius);
 }

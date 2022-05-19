@@ -120,7 +120,7 @@ namespace ZoDream.Player
 
         private void OpenIfEmpty()
         {
-            Catalog.OpenPicker();
+            Catalog.OpenPicker(true);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -246,11 +246,33 @@ namespace ZoDream.Player
                 case "桌面歌词":
                     ShowLyrics();
                     break;
+                case "编辑歌词":
+                    EditLyrics();
+                    break;
+                case "在线搜索":
+                    OnlineSearch();
+                    break;
                 default:
                     break;
             }
         }
 
+        private void OnlineSearch()
+        {
+            var page = new SearchWindow();
+            page.Show();
+        }
+
+        private void EditLyrics()
+        {
+            var page = new LyricsEditWindow();
+            page.Show();
+            _ = page.LoadLyrics(ViewModel.Lyrics);
+            page.OnPreview += (_, e) =>
+            {
+                LyricsPanel.Items = e.NewValue == null ? null : e.NewValue.Items;
+            };
+        }
 
         private void ShowSetting()
         {

@@ -1,0 +1,29 @@
+﻿<Window x:Class="ZoDream.Player.Pages.LyricsEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ctl="clr-namespace:ZoDream.Shared.Controls;assembly=ZoDream.Shared.Controls"
+        xmlns:local="clr-namespace:ZoDream.Player.Pages"
+        mc:Ignorable="d"
+        Title="Lyrics Edit" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="[开始时间]歌词"/>
+            <TextBlock Text="[开始时间,持续时间]歌词"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <ctl:IconButton x:Name="BeginBtn" Icon="&#xE849;" Label="开始时间" Click="BeginBtn_Click"/>
+            <ctl:IconButton x:Name="EndBtn" Icon="&#xE848;" Label="结束时间" Click="EndBtn_Click"/>
+            <ctl:IconButton x:Name="PreviewBtn" Icon="&#xE295;" Label="选择文件" Click="PreviewBtn_Click"/>
+            <ctl:IconButton x:Name="OpenBtn" Icon="&#xE1A5;" Label="选择文件" Click="OpenBtn_Click"/>
+            <ctl:IconButton x:Name="SaveBtn" Icon="&#xE105;" Label="保存文件" Click="SaveBtn_Click"/>
+        </StackPanel>
+        <TextBox x:Name="LyricsTb" Grid.Row="1" AcceptsReturn="True" 
+                 DragOver="LyricsTb_DragOver" Drop="LyricsTb_Drop" FontSize="20"/>
+    </Grid>
+</Window>

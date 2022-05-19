@@ -6,7 +6,9 @@ namespace ZoDream.Shared.Utils
 {
     public static class Time
     {
-        public static string Format(double val, bool isSecond = true)
+        static readonly int[] TIME_SPLIT = new int[] { 60, 60, 60, 24, 30 };
+
+        public static string Format(double val, bool isSecond = true, int minLength = 0)
         {
             if (!isSecond)
             {
@@ -14,16 +16,21 @@ namespace ZoDream.Shared.Utils
             }
             var items = new List<string>
             {
-                TwoPad(val % 60)
+                TwoPad(val % TIME_SPLIT[0])
             };
+            var i = 0;
             while (true)
             {
-                val = Math.Floor(val / 60);
+                val = Math.Floor(val / TIME_SPLIT[i++]);
                 if (val <= 0)
                 {
                     break;
                 }
-                items.Add(ToFixed(val % 60));
+                items.Add(ToFixed(val % TIME_SPLIT[i]));
+            }
+            for (i = items.Count; i < minLength; i++)
+            {
+                items.Add(ToFixed(0));
             }
             items.Reverse();
             return string.Join(":", items);
@@ -53,9 +60,15 @@ namespace ZoDream.Shared.Utils
         {
             var args = val.Split(':');
             var count = .0;
-            for (int i = 0; i < args.Length; i++)
+            var baseTime = 1;
+            var j = 0;
+            for (int i = args.Length - 1; i >= 0; i--,j++)
             {
-                count += Convert.ToDouble(args[i]) * Math.Pow(60, args.Length - i - 1);
+                if (j > 0)
+                {
+                    baseTime *= TIME_SPLIT[j - 1];
+                }
+                count += Convert.ToDouble(args[i]) * baseTime;
             }
             if (!isSecond && args.Length > 1)
             {

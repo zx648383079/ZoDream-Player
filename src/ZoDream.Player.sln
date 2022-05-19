@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Tests", "ZoDream.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Shared.Controls", "..\shared\ZoDream.Shared.Controls\ZoDream.Shared.Controls.csproj", "{A9A127C8-C1EA-418B-84F9-4CBD7E3024A8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{DFE78D90-B722-49C0-B98D-AE49E8A5A9CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMusicLoader", "plugins\NetMusicLoader\NetMusicLoader.csproj", "{E82C8325-76CA-4B17-9068-90BBCF2DABA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,12 +143,33 @@ Global
 		{A9A127C8-C1EA-418B-84F9-4CBD7E3024A8}.Release|x64.Build.0 = Release|Any CPU
 		{A9A127C8-C1EA-418B-84F9-4CBD7E3024A8}.Release|x86.ActiveCfg = Release|Any CPU
 		{A9A127C8-C1EA-418B-84F9-4CBD7E3024A8}.Release|x86.Build.0 = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|x64.Build.0 = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Debug|x86.Build.0 = Debug|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|ARM.Build.0 = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|ARM64.Build.0 = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|x64.ActiveCfg = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|x64.Build.0 = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|x86.ActiveCfg = Release|Any CPU
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1CF10819-604C-40D8-9238-0ED861F596D0} = {763043FE-03BA-458B-91BA-A00C499EF858}
+		{E82C8325-76CA-4B17-9068-90BBCF2DABA8} = {DFE78D90-B722-49C0-B98D-AE49E8A5A9CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {547CEB0E-4BC8-4874-B1B4-5723A43063BF}

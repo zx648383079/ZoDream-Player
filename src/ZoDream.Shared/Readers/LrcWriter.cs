@@ -133,7 +133,7 @@ namespace ZoDream.Shared.Readers
 
         protected virtual string RenderTagTime(int val)
         {
-            return Time.Format(val);
+            return Time.Format(val, false, 2);
         }
 
         protected virtual string RenderWordTime(LyricsWordItem word)

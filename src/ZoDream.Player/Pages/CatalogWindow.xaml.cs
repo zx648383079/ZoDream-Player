@@ -64,7 +64,7 @@ namespace ZoDream.Player.Pages
             OpenPicker();
         }
 
-        public void OpenPicker()
+        public void OpenPicker(bool goPlay = false)
         {
             var picker = new Microsoft.Win32.OpenFileDialog
             {
@@ -77,7 +77,7 @@ namespace ZoDream.Player.Pages
             {
                 return;
             }
-            ViewModel.AddFilesAsync(picker.FileNames);
+            ViewModel.AddFilesAsync(picker.FileNames, goPlay);
         }
 
         private void FolderBtn_Click(object sender, RoutedEventArgs e)

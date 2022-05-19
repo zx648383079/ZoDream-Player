@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
 	  <UseWindowsForms>true</UseWindowsForms>
 	  <ApplicationIcon>player.ico</ApplicationIcon>
+	  <BaseOutputPath>..\bin</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

@@ -43,5 +43,7 @@ namespace ZoDream.Shared.Models
 
         public double LyricsActiveFontSize { get; set; } = 20;
 
+        public List<string> PluginItems { get; set; } = new();
+
     }
 }
