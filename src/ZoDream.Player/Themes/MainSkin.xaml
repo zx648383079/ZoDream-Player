@@ -5,6 +5,8 @@
     <FontFamily x:Key="IconFontFamily">Segoe MDL2 Assets</FontFamily>
     <cvt:TimeConverter x:Key="TimeCvt"/>
     <cvt:BoolConverter x:Key="BoolCvt"/>
+    <cvt:DownloadStatusConverter x:Key="StatusCvt"/>
+    <cvt:SizeConverter x:Key="SizeCvt"/>
 
     <Style x:Key="IconBtn" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>

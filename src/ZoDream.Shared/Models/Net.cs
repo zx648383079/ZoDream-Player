@@ -23,13 +23,11 @@ namespace ZoDream.Shared.Models
     {
         public List<NetItem> Data { get; set; } = new();
 
-        public int Page { get; set; }
+        public long Page { get; set; }
 
         public int PerPage { get; set; }
 
-        public int Total { get; set; }
-
-        public bool HasMore { get; set; }
+        public long Total { get; set; }
     }
 
     public enum NetSoundQuality

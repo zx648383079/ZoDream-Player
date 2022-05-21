@@ -9,6 +9,7 @@
         Title="SearchWindow" Height="450" Width="800"
         WindowStartupLocation="CenterScreen"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Unloaded="Window_Unloaded"
         Style="{StaticResource CustomWin}">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,21 +22,114 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Column="1">
+            <Button x:Name="DownloadBtn" Click="DownloadBtn_Click" Content="&#xE118;" Style="{StaticResource MenuIconBtn}"/>
             <Button x:Name="MinBtn" Click="MinBtn_Click" Content="&#xE921;" Style="{StaticResource MenuIconBtn}"/>
             <Button x:Name="CloseBtn" Click="CloseBtn_Click" Content="&#xE106;" Style="{StaticResource MenuIconBtn}"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBox MaxLines="1"  Width="200"/>
-            <ComboBox VerticalContentAlignment="Center" Width="100"/>
-            <Button Content="&#xE721;" Style="{StaticResource MenuIconBtn}"/>
+        <StackPanel Orientation="Horizontal" Margin="10,0">
+            <TextBox x:Name="KeywordsTb" Text="{Binding SoundQuality,Mode=TwoWay}" KeyDown="KeywordsTb_KeyDown" MaxLines="1"  Width="200"/>
+            <ComboBox x:Name="QualityTb" ItemsSource="{Binding QualityItems}" 
+                      SelectedValue="{Binding SoundQuality, Mode=TwoWay}"
+                      VerticalContentAlignment="Center" Width="100"/>
+            <Button x:Name="SearchBtn" Content="&#xE721;" Click="SearchBtn_Click" Style="{StaticResource MenuIconBtn}"/>
         </StackPanel>
-        <ListBox Grid.Row="1" HorizontalContentAlignment="Stretch" Grid.ColumnSpan="2">
+        <ListBox
+            x:Name="NetBox"
+            ItemsSource="{Binding NetItems}"
+            Grid.Row="1" HorizontalContentAlignment="Stretch" Grid.ColumnSpan="2">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name}"/>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ctl:Pagination Page="50" Total="10000" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <ctl:Pagination Page="{Binding Page}" Total="{Binding Total}"
+                        PageChanged="Pagination_PageChanged"
+                        Grid.Row="2" 
+                        Grid.ColumnSpan="2" Margin="10,0"/>
+        <Popup x:Name="DownloadPopup"
+               Width="300" Height="400"
+               Style="{StaticResource CustomPopup}" MouseEnter="DownloadPopup_MouseEnter">
+            <Border Style="{StaticResource CustomPopupInner}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="下载" VerticalAlignment="Center"/>
+                    <ListBox ItemsSource="{Binding DownloadItems}" 
+                             HorizontalContentAlignment="Stretch"
+                             Grid.Row="1">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding Status,Converter={StaticResource StatusCvt}}" Grid.Row="1"/>
+
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1" 
+                                                HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Speed,Converter={StaticResource SizeCvt},ConverterParameter=true}"
+                                                   Visibility="{Binding Status,Converter={StaticResource StatusCvt},ConverterParameter=4}"/>
+                                        <TextBlock Text="{Binding Progress,Converter={StaticResource SizeCvt}}" Margin="10,0,0,0"/>
+                                        <TextBlock Text="/"/>
+                                        <TextBlock Text="{Binding Length,Converter={StaticResource SizeCvt}}"/>
+                                    </StackPanel>
+                                    <ProgressBar Grid.Column="1" Grid.Row="1" 
+                                                 Value="{Binding Progress}" 
+                                                 Maximum="{Binding Length}"
+                                                 Visibility="{Binding Status,Converter={StaticResource StatusCvt},ConverterParameter=4}"/>
+
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" 
+                                                Grid.Column="2" Grid.RowSpan="2">
+                                        <!--<Button x:Name="ContinueBtn" 
+                                                Content="&#xE102;" 
+                                                DataContext="{Binding}"
+                                                Click="ContinueBtn_Click"
+                                                Visibility="{Binding Status,Converter={StaticResource StatusCvt},ConverterParameter=1}"
+                                                Style="{StaticResource MenuIconBtn}"/>
+                                        <Button x:Name="PauseBtn" 
+                                                Content="&#xE103;" 
+                                                DataContext="{Binding}"
+                                                Click="PauseBtn_Click"
+                                                Visibility="{Binding Status,Converter={StaticResource StatusCvt},ConverterParameter=2}"
+                                                Style="{StaticResource MenuIconBtn}"/>-->
+                                        <Button x:Name="RetryBtn" 
+                                                Content="&#xE149;" 
+                                                DataContext="{Binding}"
+                                                Click="RetryBtn_Click"
+                                                Visibility="{Binding Status,Converter={StaticResource StatusCvt},ConverterParameter=3}"
+                                                Style="{StaticResource MenuIconBtn}"/>
+                                        <Button x:Name="RemoveBtn" 
+                                                DataContext="{Binding}"
+                                                Content="&#xE106;" Click="RemoveBtn_Click" Style="{StaticResource MenuIconBtn}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+            
+        </Popup>
     </Grid>
 </Window>

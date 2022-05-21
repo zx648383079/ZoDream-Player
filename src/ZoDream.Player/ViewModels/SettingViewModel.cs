@@ -233,7 +233,7 @@ namespace ZoDream.Player.ViewModels
             set => Set(ref pluginFileItems, value);
         }
 
-        private List<string> pluginItems;
+        private List<string> pluginItems = new();
 
         public List<string> PluginItems
         {

@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Shared.Controls", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{DFE78D90-B722-49C0-B98D-AE49E8A5A9CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMusicLoader", "plugins\NetMusicLoader\NetMusicLoader.csproj", "{E82C8325-76CA-4B17-9068-90BBCF2DABA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetMusicLoader", "plugins\NetMusicLoader\NetMusicLoader.csproj", "{E82C8325-76CA-4B17-9068-90BBCF2DABA8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoDream.Shared.Http", "..\shared\ZoDream.Shared.Http\ZoDream.Shared.Http.csproj", "{A71CF24B-72FD-4183-B673-499BF2E0AE9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -163,6 +165,26 @@ Global
 		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|x64.Build.0 = Release|Any CPU
 		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|x86.ActiveCfg = Release|Any CPU
 		{E82C8325-76CA-4B17-9068-90BBCF2DABA8}.Release|x86.Build.0 = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|ARM.Build.0 = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|x64.Build.0 = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Debug|x86.Build.0 = Debug|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|ARM.Build.0 = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|ARM64.Build.0 = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|x64.ActiveCfg = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|x64.Build.0 = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|x86.ActiveCfg = Release|Any CPU
+		{A71CF24B-72FD-4183-B673-499BF2E0AE9F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

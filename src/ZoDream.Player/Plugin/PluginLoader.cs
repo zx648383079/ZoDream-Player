@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -12,9 +13,62 @@ using ZoDream.Shared.Models;
 namespace ZoDream.Player.Plugin
 {
 
-    public static class PluginLoader
+    public class PluginLoader: IDisposable
     {
         const string PluginFolder = "plugins";
+
+        #region 加载器
+
+ 
+
+        private Dictionary<string, PluginLoadContext> ContextItems = new();
+        public List<INetSource> InstanceItems = new();
+
+        public PluginLoader(IEnumerable<string> items)
+        {
+            Append(items);
+        }
+
+        public void Append(IEnumerable<string> items)
+        {
+            var baseFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PluginFolder);
+            foreach (var item in items)
+            {
+                if (ContextItems.ContainsKey(item))
+                {
+                    continue;
+                }
+                var pluginLocation = Path.Combine(baseFolder, item);
+                var loadContext = new PluginLoadContext(pluginLocation);
+                var assembly = loadContext.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginLocation));
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (typeof(INetSource).IsAssignableFrom(type))
+                    {
+                        if (Activator.CreateInstance(type) is INetSource result)
+                        {
+                            InstanceItems.Add(result);
+                        }
+                    }
+                }
+                ContextItems.Add(item, loadContext);
+            }
+        }
+
+        public void Dispose()
+        {
+            PluginItem.Clear();
+            foreach (var item in ContextItems)
+            {
+                item.Value.Unload();
+            }
+            ContextItems.Clear();
+        }
+        #endregion
+
+        #region 一些加载方法
+
+
 
         public static IList<PluginItem> Load()
         {
@@ -214,7 +268,6 @@ namespace ZoDream.Player.Plugin
                     $"Available types: {availableTypes}");
             }
         }
-
-        
+        #endregion
     }
 }

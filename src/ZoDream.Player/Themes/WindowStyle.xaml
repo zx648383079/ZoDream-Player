@@ -26,4 +26,18 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="CustomPopup" TargetType="Popup">
+        <Setter Property="AllowsTransparency" Value="True"/>
+    </Style>
+    <Style x:Key="CustomPopupInner" TargetType="Border">
+        <Setter Property="Background" Value="#fff"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="7" ShadowDepth="0"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
