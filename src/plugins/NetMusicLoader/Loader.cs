@@ -10,12 +10,12 @@ namespace NetMusicLoader
     {
         public Task<bool> SaveAsync(string fileName, string url, NetProgressEventHandler onProgress, CancellationToken token)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
 
         public Task<NetPage> SearchAsync(string keywords, long page, CancellationToken token)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new NetPage());
         }
     }
 }

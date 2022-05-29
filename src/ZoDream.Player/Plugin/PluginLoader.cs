@@ -57,7 +57,7 @@ namespace ZoDream.Player.Plugin
 
         public void Dispose()
         {
-            PluginItem.Clear();
+            InstanceItems.Clear();
             foreach (var item in ContextItems)
             {
                 item.Value.Unload();
