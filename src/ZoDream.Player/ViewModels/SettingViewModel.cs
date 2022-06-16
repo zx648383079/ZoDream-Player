@@ -267,7 +267,7 @@ namespace ZoDream.Player.ViewModels
             return Source;
         }
 
-        public void PluginExport(string[] fileNames)
+        public void PluginImport(string[] fileNames)
         {
             var items = PluginLoader.Save(fileNames);
             foreach (var item in items)

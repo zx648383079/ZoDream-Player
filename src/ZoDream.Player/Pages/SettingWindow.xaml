@@ -149,7 +149,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                            <Button x:Name="ExportBtn" Click="ExportBtn_Click" Content="导入" Width="80"/>
+                            <Button x:Name="ImportBtn" Click="ImportBtn_Click" Content="导入" Width="80"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>

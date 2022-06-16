@@ -40,7 +40,7 @@ namespace ZoDream.Player.Pages
             ViewModel.PluginUnInstall((sender as Button).DataContext as PluginItem);
         }
 
-        private void ExportBtn_Click(object sender, RoutedEventArgs e)
+        private void ImportBtn_Click(object sender, RoutedEventArgs e)
         {
             var picker = new Microsoft.Win32.OpenFileDialog
             {
@@ -53,7 +53,7 @@ namespace ZoDream.Player.Pages
             {
                 return;
             }
-            ViewModel.PluginExport(picker.FileNames);
+            ViewModel.PluginImport(picker.FileNames);
         }
     }
 }
