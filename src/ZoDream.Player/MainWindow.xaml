@@ -13,6 +13,17 @@
         WindowStartupLocation="CenterScreen"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Style="{StaticResource CustomWin}">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo Description="{Binding MusicName}">
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfoCollection>
+                    <ThumbButtonInfo/>
+                    <ThumbButtonInfo/>
+                    <ThumbButtonInfo/>
+                </ThumbButtonInfoCollection>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
     <Window.ContextMenu>
         <ContextMenu x:Name="SettingMenu">
             <MenuItem Header="在线搜索" Click="MenuItem_Click"/>
@@ -35,7 +46,7 @@
         </StackPanel>
         <ctl:SpectrumPanel x:Name="SpectPanel" Grid.Row="1" Kind="RingLine"/>
         <ctl:LyricsPanel x:Name="LyricsPanel" Grid.Row="1" ItemChanged="LyricsPanel_ItemChanged"/>
-        <sctl:ProgressBar x:Name="ProgressBar" Grid.Row="2" Margin="10,0" ValueChanged="ProgressBar_ValueChanged"/>
+        <sctl:ProgressBar x:Name="ProgressBar" Grid.Row="2" ValueChanged="ProgressBar_ValueChanged"/>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

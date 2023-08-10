@@ -238,7 +238,7 @@ namespace ZoDream.Player
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as MenuItem).Header)
+            switch ((sender as MenuItem)!.Header)
             {
                 case "设置":
                     ShowSetting();

@@ -4,11 +4,11 @@
     xmlns:local="clr-namespace:ZoDream.Player.Controls">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Themes/Catalog.xaml"/>
-        <ResourceDictionary Source="/Themes/Lyrics.xaml"/>
-        <ResourceDictionary Source="/Themes/Panel.xaml"/>
-        <ResourceDictionary Source="/Themes/Play.xaml"/>
-        <ResourceDictionary Source="/Themes/RollLabel.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Player;component/Themes/Catalog.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Player;component/Themes/Lyrics.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Player;component/Themes/Panel.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Player;component/Themes/Play.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ZoDream.Player;component/Themes/RollLabel.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 

@@ -57,7 +57,7 @@ namespace ZoDream.Player.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LyricsPanel), new FrameworkPropertyMetadata(typeof(LyricsPanel)));
         }
 
-        public IList<LyricsItem> Items
+        public IList<LyricsItem>? Items
         {
             get { return (IList<LyricsItem>)GetValue(ItemsProperty); }
             set { SetValue(ItemsProperty, value); }
@@ -163,7 +163,7 @@ namespace ZoDream.Player.Controls
 
         private void Line_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ItemChanged?.Invoke(this, (sender as LyricsPanelItem).Source);
+            ItemChanged?.Invoke(this, (sender as LyricsPanelItem)!.Source);
         }
 
         private void TimeUpdate()

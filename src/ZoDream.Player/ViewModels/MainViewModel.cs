@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ZoDream.Shared.Models;
-using ZoDream.Shared.Readers;
 using ZoDream.Shared.Storage;
 using ZoDream.Shared.ViewModels;
 
@@ -42,6 +38,13 @@ namespace ZoDream.Player.ViewModels
         {
             get => isPaused;
             set => Set(ref isPaused, value);
+        }
+
+        private string musicName = string.Empty;
+
+        public string MusicName {
+            get => musicName;
+            set => Set(ref musicName, value);
         }
 
 

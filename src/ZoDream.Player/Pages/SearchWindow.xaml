@@ -26,34 +26,38 @@
             <Button x:Name="MinBtn" Click="MinBtn_Click" Content="&#xE921;" Style="{StaticResource MenuIconBtn}"/>
             <Button x:Name="CloseBtn" Click="CloseBtn_Click" Content="&#xE106;" Style="{StaticResource MenuIconBtn}"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="10,0">
-            <TextBox x:Name="KeywordsTb" Text="{Binding SoundQuality,Mode=TwoWay}" KeyDown="KeywordsTb_KeyDown" MaxLines="1"  Width="200"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="&#xE112;" Style="{StaticResource MenuIconBtn}"/>
+            <TextBox x:Name="KeywordsTb" Text="{Binding Keywords,Mode=TwoWay}" KeyDown="KeywordsTb_KeyDown" MaxLines="1"  Width="200"/>
             <ComboBox x:Name="QualityTb" ItemsSource="{Binding QualityItems}" 
                       SelectedValue="{Binding SoundQuality, Mode=TwoWay}"
                       VerticalContentAlignment="Center" Width="100"/>
             <Button x:Name="SearchBtn" Content="&#xE721;" Click="SearchBtn_Click" Style="{StaticResource MenuIconBtn}"/>
         </StackPanel>
-        <ListBox
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            <ListBox
             x:Name="NetBox"
             ItemsSource="{Binding NetItems}"
-            Grid.Row="1" HorizontalContentAlignment="Stretch" Grid.ColumnSpan="2">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                    <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Name}"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            HorizontalContentAlignment="Stretch">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+       
         <ctl:Pagination Page="{Binding Page}" Total="{Binding Total}"
                         PageChanged="Pagination_PageChanged"
                         Grid.Row="2" 
